@@ -3,6 +3,8 @@ import { Panel } from '../../components/Panel';
 import { DataTable } from '../../components/DataTable';
 import { useAppState } from '../../app/state';
 import { selectTroubleshootingContext } from './selectors';
+import { StatusBadge } from '../../components/StatusBadge';
+import { IssueTag } from '../../components/IssueTag';
 
 export function TroubleshootingBridgePage() {
   const { data } = useAppState();
@@ -16,13 +18,16 @@ export function TroubleshootingBridgePage() {
 
   return (
     <div>
-      <h1>Troubleshooting Bridge</h1>
+      <div className="page-header">
+        <h1>Troubleshooting Bridge</h1>
+        <p>Thin bridge: classify issue context and route to next best view.</p>
+      </div>
 
       <Panel title="Context Summary">
         <p>Site: {context.siteId || 'all'}</p>
         <p>Device: {context.device?.name ?? 'not fixed'}</p>
-        <p>Issue context: {context.issue}</p>
-        <p>Current health: {context.device?.health ?? 'mixed'}</p>
+        <p>Issue context: <IssueTag value={context.issue} /></p>
+        <p>Current health: <StatusBadge value={context.device?.health ?? 'warning'} /></p>
       </Panel>
 
       <Panel title="Suspected Category">
@@ -43,7 +48,7 @@ export function TroubleshootingBridgePage() {
           rows={context.issueDevices.map((d) => [
             d.name,
             d.siteId,
-            d.health,
+            <StatusBadge key={`${d.id}-h`} value={d.health} />,
             <>
               <Link to={`/device-360/${d.id}`}>Device 360</Link>
               {' | '}
@@ -54,6 +59,12 @@ export function TroubleshootingBridgePage() {
           ])}
         />
       </Panel>
+
+      <div className="quick-links">
+        <Link to="/assurance">Back to Assurance</Link>
+        <Link to={context.siteId ? `/topology?site=${context.siteId}` : '/topology'}>Back to Topology</Link>
+        {context.device && <Link to={`/device-360/${context.device.id}`}>Back to Device 360</Link>}
+      </div>
     </div>
   );
 }

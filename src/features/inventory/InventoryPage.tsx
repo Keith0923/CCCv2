@@ -6,6 +6,7 @@ import { useAppState } from '../../app/state';
 import { useMemo, useState } from 'react';
 import { Panel } from '../../components/Panel';
 import { DeviceRole, PreferredManagementIpPolicy } from '../../domains/types';
+import { IssueTag } from '../../components/IssueTag';
 
 const roleOptions: DeviceRole[] = ['core', 'distribution', 'access', 'wireless-controller', 'unknown'];
 const policyOptions: PreferredManagementIpPolicy[] = ['loopback', 'interface-vlan', 'system'];
@@ -33,7 +34,10 @@ export function InventoryPage() {
 
   return (
     <div>
-      <h1>Inventory</h1>
+      <div className="page-header">
+        <h1>Inventory</h1>
+        <p>Primary workspace for post-discovery normalization.</p>
+      </div>
       <FilterBar>
         <select value={assignment} onChange={(e) => setAssignment(e.target.value)}>
           <option value="all">All</option>
@@ -51,17 +55,16 @@ export function InventoryPage() {
       )}
 
       <DataTable
-        columns={['Device', 'Mgmt IP', 'Reachability', 'Detected Role', 'Admin Override', 'Effective Role', 'Site', 'Assignment', 'Health', 'Source Job', 'Actions']}
+        columns={['Device', 'Mgmt IP', 'Reachability', 'Detected Role', 'Admin Override', 'Site', 'Health', 'Issue Hint', 'Source Job', 'Actions']}
         rows={devices.map((d) => [
           d.name,
           d.managementIp,
-          d.reachability,
+          <StatusBadge key={`${d.id}-reach`} value={d.reachability} />,
           d.roleDetected,
           d.roleOverride ?? '-',
-          d.roleOverride ?? d.roleDetected,
           d.siteId,
-          <StatusBadge key={`${d.id}-as`} value={d.assignmentState} />,
           <StatusBadge key={`${d.id}-h`} value={d.health} />,
+          <>{d.assignmentState !== 'assigned' && <IssueTag value="unassigned" />} {(d.roleOverride ?? d.roleDetected) === 'unknown' && <IssueTag value="mis-role" />} {d.reachability !== 'reachable' && <IssueTag value="mgmt-ambiguity" />}</>,
           d.sourceDiscoveryJobId,
           <>
             <button onClick={() => setSelectedDeviceId(d.id)}>Normalize</button>
@@ -79,21 +82,21 @@ export function InventoryPage() {
           <div className="normalize-grid">
             <label>
               Site assignment
-              <select defaultValue={selected.siteId} onChange={(e) => normalizeDevice({ deviceId: selected.id, siteId: e.target.value })}>
+              <select value={selected.siteId} onChange={(e) => normalizeDevice({ deviceId: selected.id, siteId: e.target.value })}>
                 {data.sites.map((s) => <option key={s.id} value={s.id}>{s.id}</option>)}
               </select>
             </label>
 
             <label>
               Role normalization (admin override)
-              <select defaultValue={selected.roleOverride ?? selected.roleDetected} onChange={(e) => normalizeDevice({ deviceId: selected.id, roleOverride: e.target.value as DeviceRole })}>
+              <select value={selected.roleOverride ?? selected.roleDetected} onChange={(e) => normalizeDevice({ deviceId: selected.id, roleOverride: e.target.value as DeviceRole })}>
                 {roleOptions.map((role) => <option key={role} value={role}>{role}</option>)}
               </select>
             </label>
 
             <label>
               Preferred management IP policy
-              <select defaultValue={selected.preferredManagementIpPolicy} onChange={(e) => normalizeDevice({ deviceId: selected.id, preferredManagementIpPolicy: e.target.value as PreferredManagementIpPolicy })}>
+              <select value={selected.preferredManagementIpPolicy} onChange={(e) => normalizeDevice({ deviceId: selected.id, preferredManagementIpPolicy: e.target.value as PreferredManagementIpPolicy })}>
                 {policyOptions.map((p) => <option key={p} value={p}>{p}</option>)}
               </select>
             </label>

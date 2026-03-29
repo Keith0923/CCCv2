@@ -3,6 +3,9 @@ import { Panel } from '../../components/Panel';
 import { useAppState } from '../../app/state';
 import { EmptyState } from '../../components/EmptyState';
 import { useMemo, useState } from 'react';
+import { selectAssuranceSummary } from '../assurance/selectors';
+import { StatusBadge } from '../../components/StatusBadge';
+import { IssueTag } from '../../components/IssueTag';
 
 function warningReasons(device: { assignmentState: string; roleDetected: string; roleOverride?: string; reachability: string }) {
   const reasons: string[] = [];
@@ -18,6 +21,7 @@ export function TopologyPage() {
   const [params] = useSearchParams();
   const siteFocus = params.get('site') ?? '';
   const [selectedLinkId, setSelectedLinkId] = useState<string>('');
+  const assurance = selectAssuranceSummary(data, siteFocus || undefined);
 
   const selectedLink = data.topologyLinks.find((l) => l.id === selectedLinkId);
 
@@ -40,20 +44,19 @@ export function TopologyPage() {
 
   return (
     <div>
-      <h1>Topology</h1>
+      <div className="page-header">
+        <h1>Topology</h1>
+        <p>Reflection view for site context and connectivity posture.</p>
+      </div>
 
       {siteFocus && (
         <Panel title="Site Focus">
           <p>Focused site: {siteFocus}</p>
           <p>Visible nodes: {nodes.length}</p>
           <p>Warnings in focus: {warningNodes.length}</p>
-          <p><Link to={`/assurance?site=${siteFocus}`}>Open Assurance Lite</Link></p>
+          <p>Site health from Assurance: <StatusBadge value={assurance.healthTotals.degradedSites > 0 ? 'degraded' : 'healthy'} /> <Link to={`/assurance?site=${siteFocus}`}>Open Assurance Lite</Link></p>
         </Panel>
       )}
-
-      <Panel title="Site / Building / Floor">
-        <ul>{data.sites.map((s) => <li key={s.id}>{s.name} / {s.building} / {s.floor} ({s.health})</li>)}</ul>
-      </Panel>
 
       <Panel title="Nodes">
         <div className="topology-grid">
@@ -65,7 +68,7 @@ export function TopologyPage() {
                 <div>{n.id}</div>
                 <div>role: {n.role}</div>
                 <div>site: {n.siteId}</div>
-                <div className="tag-row">{reasons.map((reason) => <span key={reason} className="warn-tag">{reason}</span>)}</div>
+                <div className="tag-row">{reasons.map((reason) => <IssueTag key={reason} value={reason} />)}</div>
                 <Link to={`/device-360/${n.deviceId}`}>Device 360</Link>
                 {' | '}
                 <Link to={`/inventory?job=${d?.sourceDiscoveryJobId ?? ''}`}>Inventory</Link>
@@ -92,7 +95,7 @@ export function TopologyPage() {
           <div>
             <p>ID: {selectedLink.id}</p>
             <p>Endpoints: {selectedLink.sourceNodeId} ⇄ {selectedLink.targetNodeId}</p>
-            <p>Quality: {selectedLink.quality}</p>
+            <p>Quality: <StatusBadge value={selectedLink.quality === 'good' ? 'healthy' : 'warning'} /></p>
           </div>
         ) : (
           <p>No link selected.</p>
@@ -103,7 +106,7 @@ export function TopologyPage() {
         <ul>
           {warningNodes.map(({ node, device, reasons }) => (
             <li key={node.id}>
-              {node.id} ({node.role}) [{reasons.join(', ')}]
+              {node.id} ({node.role}) {reasons.map((r) => <IssueTag key={r} value={r} />)}
               {' - '}
               <Link to={`/inventory?job=${device?.sourceDiscoveryJobId ?? ''}`}>Inventory</Link>
               {' / '}

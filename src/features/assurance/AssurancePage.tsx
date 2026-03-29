@@ -4,6 +4,8 @@ import { DataTable } from '../../components/DataTable';
 import { SummaryStrip } from '../../components/SummaryStrip';
 import { useAppState } from '../../app/state';
 import { selectAssuranceSummary } from './selectors';
+import { StatusBadge } from '../../components/StatusBadge';
+import { IssueTag } from '../../components/IssueTag';
 
 export function AssurancePage() {
   const { data } = useAppState();
@@ -19,7 +21,10 @@ export function AssurancePage() {
 
   return (
     <div>
-      <h1>Assurance Lite</h1>
+      <div className="page-header">
+        <h1>Assurance Lite</h1>
+        <p>Operational posture summary and next investigation targets.</p>
+      </div>
 
       <SummaryStrip
         items={[
@@ -35,7 +40,7 @@ export function AssurancePage() {
           columns={['Site', 'Health', 'Impacted', 'Total Devices', 'Actions']}
           rows={summary.siteSummary.map((site) => [
             site.name,
-            site.health,
+            <StatusBadge key={`${site.siteId}-health`} value={site.health} />,
             site.impacted,
             site.totalDevices,
             <>
@@ -51,9 +56,9 @@ export function AssurancePage() {
 
       <Panel title="Issue Category Summary">
         <ul>
-          <li>unassigned: {summary.categorySummary.unassigned} <Link to="/assurance?issue=unassigned">filter</Link> | <Link to="/troubleshooting?issue=unassigned">bridge</Link></li>
-          <li>mis-role: {summary.categorySummary['mis-role']} <Link to="/assurance?issue=mis-role">filter</Link> | <Link to="/troubleshooting?issue=mis-role">bridge</Link></li>
-          <li>mgmt-ambiguity: {summary.categorySummary['mgmt-ambiguity']} <Link to="/assurance?issue=mgmt-ambiguity">filter</Link> | <Link to="/troubleshooting?issue=mgmt-ambiguity">bridge</Link></li>
+          <li><IssueTag value="unassigned" /> {summary.categorySummary.unassigned} <Link to="/assurance?issue=unassigned">filter</Link> | <Link to="/troubleshooting?issue=unassigned">bridge</Link></li>
+          <li><IssueTag value="mis-role" /> {summary.categorySummary['mis-role']} <Link to="/assurance?issue=mis-role">filter</Link> | <Link to="/troubleshooting?issue=mis-role">bridge</Link></li>
+          <li><IssueTag value="mgmt-ambiguity" /> {summary.categorySummary['mgmt-ambiguity']} <Link to="/assurance?issue=mgmt-ambiguity">filter</Link> | <Link to="/troubleshooting?issue=mgmt-ambiguity">bridge</Link></li>
         </ul>
       </Panel>
 
@@ -63,8 +68,8 @@ export function AssurancePage() {
           rows={filteredImpacted.map((row) => [
             row.device.name,
             row.device.siteId,
-            row.device.health,
-            row.categories.join(', '),
+            <StatusBadge key={`${row.device.id}-health`} value={row.device.health} />,
+            <>{row.categories.map((category) => <IssueTag key={category} value={category} />)}</>,
             <>
               <Link to={`/device-360/${row.device.id}`}>Device 360</Link>
               {' | '}

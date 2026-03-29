@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import { Panel } from '../../components/Panel';
 import { useAppState } from '../../app/state';
 import { EmptyState } from '../../components/EmptyState';
+import { StatusBadge } from '../../components/StatusBadge';
+import { IssueTag } from '../../components/IssueTag';
 
 export function Device360Page() {
   const { id } = useParams();
@@ -19,17 +21,20 @@ export function Device360Page() {
 
   return (
     <div>
-      <h1>Device 360 - {device.name}</h1>
+      <div className="page-header">
+        <h1>Device 360 - {device.name}</h1>
+        <p>Causality view: discovery metadata, normalization path, current state.</p>
+      </div>
 
       <Panel title="Current State">
-        <p>Health: {context?.currentHealth ?? device.health}</p>
+        <p>Health: <StatusBadge value={context?.currentHealth ?? device.health} /></p>
         <p>Site: {device.siteId}</p>
         <p>Role: {effectiveRole} (detected: {device.roleDetected}, override: {device.roleOverride ?? 'none'})</p>
-        <p>Reachability: {device.reachability}</p>
+        <p>Reachability: <StatusBadge value={device.reachability} /></p>
       </Panel>
 
       <Panel title="Current Issues">
-        <ul>{(context?.currentIssues ?? []).map((i) => <li key={i}>{i}</li>)}</ul>
+        <div className="tag-row">{(context?.currentIssues ?? []).map((i) => <IssueTag key={i} value={i.toLowerCase().includes('role') ? 'mis-role' : i.toLowerCase().includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'} />)}</div>
         <p><Link to={`/assurance?site=${device.siteId}`}>Open in Assurance Lite</Link> | <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}&issue=${(context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'}`}>Troubleshooting Bridge</Link></p>
       </Panel>
 
@@ -44,10 +49,6 @@ export function Device360Page() {
         <ul>{normalizationTimeline.map((h) => <li key={h.id}>{h.at} - [{h.type}] {h.message}</li>)}</ul>
       </Panel>
 
-      <Panel title="Full Timeline">
-        <ul>{history.map((h) => <li key={h.id}>{h.at} - [{h.type}] {h.message}</li>)}</ul>
-      </Panel>
-
       <Panel title="Recommended Next Action">
         <p>{context?.recommendedNextAction ?? 'Review normalization status in Inventory.'}</p>
       </Panel>
@@ -57,7 +58,6 @@ export function Device360Page() {
         <Link to="/topology">Topology</Link>
         <Link to={`/assurance?site=${device.siteId}`}>Assurance Lite</Link>
         <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}`}>Troubleshooting Bridge</Link>
-        <a href="#" onClick={(e) => e.preventDefault()}>Related Commands (coming soon)</a>
       </div>
     </div>
   );

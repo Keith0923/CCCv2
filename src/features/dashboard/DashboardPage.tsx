@@ -3,6 +3,7 @@ import { Panel } from '../../components/Panel';
 import { SummaryStrip } from '../../components/SummaryStrip';
 import { useAppState } from '../../app/state';
 import { selectAssuranceSummary } from '../assurance/selectors';
+import { StatusBadge } from '../../components/StatusBadge';
 
 export function DashboardPage() {
   const { data } = useAppState();
@@ -11,7 +12,10 @@ export function DashboardPage() {
 
   return (
     <div>
-      <h1>Dashboard - Product Flow Hub</h1>
+      <div className="page-header">
+        <h1>Dashboard - Product Flow Hub</h1>
+        <p>Discovery → Inventory → Topology → Device 360 → Assurance</p>
+      </div>
       <SummaryStrip items={[
         { label: 'Running Discovery Jobs', value: data.discoveryJobs.filter((j) => j.status === 'running').length },
         { label: 'Unassigned Devices', value: unassigned },
@@ -21,8 +25,11 @@ export function DashboardPage() {
       <Panel title="Recent Discovery Outcomes">
         <ul>{data.discoveryResults.map((r) => <li key={r.id}>{r.jobId}: S {r.summary.success} / P {r.summary.partial} / F {r.summary.failed}</li>)}</ul>
       </Panel>
-      <Panel title="Recent Important Issues">
-        <ul>{data.issues.map((i) => <li key={i.id}>{i.message} <Link to="/assurance">Assurance</Link></li>)}</ul>
+      <Panel title="Operational Focus">
+        <ul>
+          <li>Degraded sites: <StatusBadge value={String(assurance.healthTotals.degradedSites > 0 ? 'degraded' : 'healthy')} /> <Link to="/assurance">Assurance</Link></li>
+          <li>Unassigned devices: <StatusBadge value={String(unassigned > 0 ? 'unassigned' : 'assigned')} /> <Link to="/inventory">Inventory</Link></li>
+        </ul>
       </Panel>
       <div className="quick-links">
         <Link to="/discovery">Go Discovery</Link>

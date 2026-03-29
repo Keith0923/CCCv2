@@ -34,7 +34,7 @@ export function DiscoveryPage() {
 
   return (
     <div>
-      <h1>Discovery</h1>
+      <div className="page-header"><h1>Discovery</h1><p>Entry point for device onboarding and downstream flow.</p></div>
       <FilterBar>
         <SearchBox value={keyword} onChange={setKeyword} />
         <select value={type} onChange={(e) => setType(e.target.value as typeof type)}>
@@ -72,7 +72,7 @@ export function DiscoveryPage() {
         </button>
       </FilterBar>
 
-      <Panel title="Latest Result Summary">
+      <Panel title="Latest Result Summary (for downstream checks)">
         <p>
           success: {recentResult?.summary.success ?? 0} / partial: {recentResult?.summary.partial ?? 0} / failed: {recentResult?.summary.failed ?? 0}
         </p>
