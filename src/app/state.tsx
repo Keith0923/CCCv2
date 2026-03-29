@@ -3,10 +3,17 @@ import { seedRepository } from '../repositories/seedRepository';
 import { DiscoveryJob, SeedData } from '../domains/types';
 
 type ThemeMode = 'light' | 'dark';
+type NewDiscoveryInput = {
+  name: string;
+  discoveryType: DiscoveryJob['discoveryType'];
+  credentialProfileId: string;
+  preferredManagementIp: DiscoveryJob['preferredManagementIp'];
+  status: DiscoveryJob['status'];
+};
 
 interface AppState {
   data: SeedData;
-  addDiscoveryJob: (job: DiscoveryJob) => void;
+  addDiscoveryJob: (input: NewDiscoveryInput) => DiscoveryJob;
   theme: ThemeMode;
   toggleTheme: () => void;
   selectedDeviceId?: string;
@@ -30,9 +37,10 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
         document.documentElement.dataset.theme = theme === 'light' ? 'dark' : 'light';
       },
-      addDiscoveryJob: (job) => {
-        seedRepository.addDiscoveryJob(job);
+      addDiscoveryJob: (input) => {
+        const job = seedRepository.addDiscoveryFlow(input);
         setData(seedRepository.getAll());
+        return job;
       }
     }),
     [data, theme, selectedDeviceId]
