@@ -3,13 +3,14 @@ export type DiscoveryType = 'ip-range' | 'cidr' | 'cdp' | 'lldp';
 export type AssignmentState = 'assigned' | 'unassigned' | 'pending';
 export type Reachability = 'reachable' | 'intermittent' | 'unreachable';
 export type DeviceRole = 'core' | 'distribution' | 'access' | 'wireless-controller' | 'unknown';
+export type PreferredManagementIpPolicy = 'loopback' | 'interface-vlan' | 'system';
 
 export interface DiscoveryJob {
   id: string;
   name: string;
   discoveryType: DiscoveryType;
   credentialProfileId: string;
-  preferredManagementIp: 'loopback' | 'interface-vlan' | 'system';
+  preferredManagementIp: PreferredManagementIpPolicy;
   status: JobStatus;
   startedAt: string;
   endedAt?: string;
@@ -36,11 +37,13 @@ export interface Device {
   name: string;
   managementIp: string;
   reachability: Reachability;
-  role: DeviceRole;
+  roleDetected: DeviceRole;
+  roleOverride?: DeviceRole;
   siteId: string;
   assignmentState: InventoryAssignmentState;
   health: 'healthy' | 'warning' | 'critical';
   sourceDiscoveryJobId: string;
+  preferredManagementIpPolicy: PreferredManagementIpPolicy;
   preferredManagementIpCandidate?: string;
 }
 
@@ -95,7 +98,7 @@ export interface TimelineEvent {
   id: string;
   deviceId: string;
   at: string;
-  type: 'discovered' | 'assigned' | 'role-corrected' | 'issue-detected';
+  type: 'discovered' | 'assigned' | 'role-corrected' | 'issue-detected' | 'normalized' | 'policy-updated';
   message: string;
 }
 

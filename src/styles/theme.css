@@ -40,3 +40,9 @@ body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--bg); 
 .quick-links { display: flex; gap: 10px; flex-wrap: wrap; }
 
 .warning-node { border-color: #f59e0b; box-shadow: 0 0 0 1px #f59e0b inset; }
+
+
+.warn-tag { display: inline-block; margin-right: 4px; padding: 2px 6px; border-radius: 999px; border: 1px solid #f59e0b; font-size: 11px; }
+.tag-row { margin: 4px 0; }
+.normalize-grid { display: grid; gap: 8px; grid-template-columns: repeat(3, minmax(200px, 1fr)); }
+.normalize-grid label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }

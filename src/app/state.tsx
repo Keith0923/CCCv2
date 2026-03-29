@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 import { seedRepository } from '../repositories/seedRepository';
-import { DiscoveryJob, SeedData } from '../domains/types';
+import { DeviceRole, DiscoveryJob, PreferredManagementIpPolicy, SeedData } from '../domains/types';
 
 type ThemeMode = 'light' | 'dark';
 type NewDiscoveryInput = {
@@ -11,9 +11,17 @@ type NewDiscoveryInput = {
   status: DiscoveryJob['status'];
 };
 
+type NormalizationInput = {
+  deviceId: string;
+  siteId?: string;
+  roleOverride?: DeviceRole;
+  preferredManagementIpPolicy?: PreferredManagementIpPolicy;
+};
+
 interface AppState {
   data: SeedData;
   addDiscoveryJob: (input: NewDiscoveryInput) => DiscoveryJob;
+  normalizeDevice: (input: NormalizationInput) => void;
   theme: ThemeMode;
   toggleTheme: () => void;
   selectedDeviceId?: string;
@@ -41,6 +49,10 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         const job = seedRepository.addDiscoveryFlow(input);
         setData(seedRepository.getAll());
         return job;
+      },
+      normalizeDevice: ({ deviceId, siteId, roleOverride, preferredManagementIpPolicy }) => {
+        seedRepository.normalizeDevice(deviceId, { siteId, roleOverride, preferredManagementIpPolicy });
+        setData(seedRepository.getAll());
       }
     }),
     [data, theme, selectedDeviceId]

@@ -34,7 +34,7 @@ export function AppShell() {
           <div>
             <p>{selected.name}</p>
             <p>{selected.managementIp}</p>
-            <p>{selected.role}</p>
+            <p>{selected.roleOverride ?? selected.roleDetected}</p>
             <button onClick={() => setSelectedDeviceId(undefined)}>Close</button>
           </div>
         )}

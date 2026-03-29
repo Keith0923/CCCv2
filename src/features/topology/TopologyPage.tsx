@@ -4,6 +4,15 @@ import { useAppState } from '../../app/state';
 import { EmptyState } from '../../components/EmptyState';
 import { useMemo, useState } from 'react';
 
+function warningReasons(device: { assignmentState: string; roleDetected: string; roleOverride?: string; reachability: string }) {
+  const reasons: string[] = [];
+  const effectiveRole = device.roleOverride ?? device.roleDetected;
+  if (device.assignmentState !== 'assigned') reasons.push('unassigned');
+  if (effectiveRole === 'unknown') reasons.push('mis-role');
+  if (device.reachability !== 'reachable') reasons.push('mgmt-ambiguity');
+  return reasons;
+}
+
 export function TopologyPage() {
   const { data } = useAppState();
   const [params] = useSearchParams();
@@ -17,10 +26,13 @@ export function TopologyPage() {
     return data.topologyNodes.filter((n) => n.siteId === siteFocus);
   }, [data.topologyNodes, siteFocus]);
 
-  const warningNodes = nodes.filter((n) => {
-    const d = data.devices.find((x) => x.id === n.deviceId);
-    return d?.health !== 'healthy' || d?.assignmentState !== 'assigned' || d?.role === 'unknown';
-  });
+  const warningNodes = nodes
+    .map((n) => {
+      const d = data.devices.find((x) => x.id === n.deviceId);
+      const reasons = d ? warningReasons(d) : [];
+      return { node: n, device: d, reasons };
+    })
+    .filter((x) => x.reasons.length > 0);
 
   if (data.topologyNodes.length === 0) {
     return <EmptyState title="No topology" description="Run discovery and assign sites to render topology." />;
@@ -34,6 +46,7 @@ export function TopologyPage() {
         <Panel title="Site Focus">
           <p>Focused site: {siteFocus}</p>
           <p>Visible nodes: {nodes.length}</p>
+          <p>Warnings in focus: {warningNodes.length}</p>
         </Panel>
       )}
 
@@ -45,12 +58,13 @@ export function TopologyPage() {
         <div className="topology-grid">
           {nodes.map((n) => {
             const d = data.devices.find((x) => x.id === n.deviceId);
-            const isWarning = d?.health !== 'healthy' || d?.assignmentState !== 'assigned' || d?.role === 'unknown';
+            const reasons = d ? warningReasons(d) : [];
             return (
-              <div key={n.id} className={`node role-${n.role} ${isWarning ? 'warning-node' : ''}`}>
+              <div key={n.id} className={`node role-${n.role} ${reasons.length ? 'warning-node' : ''}`}>
                 <div>{n.id}</div>
-                <div>{n.role}</div>
-                <div>{d?.health ?? 'unknown'}</div>
+                <div>role: {n.role}</div>
+                <div>site: {n.siteId}</div>
+                <div className="tag-row">{reasons.map((reason) => <span key={reason} className="warn-tag">{reason}</span>)}</div>
                 <Link to={`/device-360/${n.deviceId}`}>Device 360</Link>
                 {' | '}
                 <Link to={`/inventory?job=${d?.sourceDiscoveryJobId ?? ''}`}>Inventory</Link>
@@ -84,13 +98,13 @@ export function TopologyPage() {
 
       <Panel title="Warning / Degraded Nodes">
         <ul>
-          {warningNodes.map((n) => (
-            <li key={n.id}>
-              {n.id} ({n.role})
+          {warningNodes.map(({ node, device, reasons }) => (
+            <li key={node.id}>
+              {node.id} ({node.role}) [{reasons.join(', ')}]
               {' - '}
-              <Link to={`/inventory?job=${data.devices.find((d) => d.id === n.deviceId)?.sourceDiscoveryJobId ?? ''}`}>Inventory</Link>
+              <Link to={`/inventory?job=${device?.sourceDiscoveryJobId ?? ''}`}>Inventory</Link>
               {' / '}
-              <Link to={`/device-360/${n.deviceId}`}>Device 360</Link>
+              <Link to={`/device-360/${node.deviceId}`}>Device 360</Link>
             </li>
           ))}
         </ul>

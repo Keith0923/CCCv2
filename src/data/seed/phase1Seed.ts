@@ -18,12 +18,12 @@ export const phase1Seed: SeedData = {
     { id: 'dr-103', jobId: 'dj-103', summary: { success: 0, partial: 0, failed: 0 }, discoveredDeviceIds: [] }
   ],
   devices: [
-    { id: 'dev-1', name: 'HQ-Core-01', managementIp: '10.10.0.10', reachability: 'reachable', role: 'core', siteId: 'site-hq-f1', assignmentState: 'assigned', health: 'healthy', sourceDiscoveryJobId: 'dj-100' },
-    { id: 'dev-2', name: 'HQ-WLC-01', managementIp: '10.10.0.50', reachability: 'intermittent', role: 'wireless-controller', siteId: 'site-hq-f1', assignmentState: 'assigned', health: 'warning', sourceDiscoveryJobId: 'dj-100', preferredManagementIpCandidate: '172.16.0.50' },
-    { id: 'dev-3', name: 'HQ-Access-44', managementIp: '10.10.1.44', reachability: 'reachable', role: 'access', siteId: 'site-hq-f2', assignmentState: 'unassigned', health: 'warning', sourceDiscoveryJobId: 'dj-100' },
-    { id: 'dev-4', name: 'BR1-Dist-01', managementIp: '10.20.0.2', reachability: 'reachable', role: 'distribution', siteId: 'site-br1-f1', assignmentState: 'assigned', health: 'healthy', sourceDiscoveryJobId: 'dj-101' },
-    { id: 'dev-5', name: 'BR1-Unknown-01', managementIp: '10.20.0.99', reachability: 'reachable', role: 'unknown', siteId: 'site-br1-f1', assignmentState: 'pending', health: 'warning', sourceDiscoveryJobId: 'dj-101' },
-    { id: 'dev-6', name: 'BR1-AP-11', managementIp: '10.20.1.11', reachability: 'unreachable', role: 'access', siteId: 'unassigned', assignmentState: 'unassigned', health: 'critical', sourceDiscoveryJobId: 'dj-101' }
+    { id: 'dev-1', name: 'HQ-Core-01', managementIp: '10.10.0.10', reachability: 'reachable', roleDetected: 'core', siteId: 'site-hq-f1', assignmentState: 'assigned', health: 'healthy', sourceDiscoveryJobId: 'dj-100', preferredManagementIpPolicy: 'loopback' },
+    { id: 'dev-2', name: 'HQ-WLC-01', managementIp: '10.10.0.50', reachability: 'intermittent', roleDetected: 'wireless-controller', siteId: 'site-hq-f1', assignmentState: 'assigned', health: 'warning', sourceDiscoveryJobId: 'dj-100', preferredManagementIpPolicy: 'interface-vlan', preferredManagementIpCandidate: '172.16.0.50' },
+    { id: 'dev-3', name: 'HQ-Access-44', managementIp: '10.10.1.44', reachability: 'reachable', roleDetected: 'access', siteId: 'site-hq-f2', assignmentState: 'unassigned', health: 'warning', sourceDiscoveryJobId: 'dj-100', preferredManagementIpPolicy: 'loopback' },
+    { id: 'dev-4', name: 'BR1-Dist-01', managementIp: '10.20.0.2', reachability: 'reachable', roleDetected: 'distribution', siteId: 'site-br1-f1', assignmentState: 'assigned', health: 'healthy', sourceDiscoveryJobId: 'dj-101', preferredManagementIpPolicy: 'interface-vlan' },
+    { id: 'dev-5', name: 'BR1-Unknown-01', managementIp: '10.20.0.99', reachability: 'reachable', roleDetected: 'unknown', siteId: 'site-br1-f1', assignmentState: 'pending', health: 'warning', sourceDiscoveryJobId: 'dj-101', preferredManagementIpPolicy: 'interface-vlan' },
+    { id: 'dev-6', name: 'BR1-AP-11', managementIp: '10.20.1.11', reachability: 'unreachable', roleDetected: 'access', siteId: 'unassigned', assignmentState: 'unassigned', health: 'critical', sourceDiscoveryJobId: 'dj-101', preferredManagementIpPolicy: 'interface-vlan' }
   ],
   sites: [
     { id: 'site-hq-f1', name: 'HQ', building: 'Main', floor: '1F', health: 'healthy' },
