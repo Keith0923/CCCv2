@@ -1,0 +1,42 @@
+:root {
+  --bg: #f4f6fb;
+  --panel: #ffffff;
+  --text: #101828;
+  --muted: #667085;
+  --border: #d0d5dd;
+}
+:root[data-theme='dark'] {
+  --bg: #0f172a;
+  --panel: #111827;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --border: #374151;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--bg); color: var(--text); }
+.shell { display: grid; grid-template-columns: 220px 1fr 320px; min-height: 100vh; }
+.left-nav { background: var(--panel); border-right: 1px solid var(--border); padding: 12px; }
+.left-nav nav { display: flex; flex-direction: column; gap: 8px; }
+.left-nav a.active { font-weight: 700; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; background: var(--panel); border-bottom: 1px solid var(--border); padding: 10px 14px; }
+.content { padding: 12px; }
+.panel { background: var(--panel); border: 1px solid var(--border); margin-bottom: 12px; border-radius: 8px; }
+.panel > header { padding: 8px 10px; border-bottom: 1px solid var(--border); font-weight: 600; }
+.panel > div { padding: 10px; }
+.summary-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+.summary-item { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 8px; }
+.data-table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--border); }
+.data-table th, .data-table td { border-bottom: 1px solid var(--border); padding: 8px; font-size: 13px; text-align: left; }
+.filter-bar { display: flex; gap: 8px; margin-bottom: 10px; }
+.search { padding: 6px 8px; min-width: 220px; }
+.badge { padding: 2px 8px; border: 1px solid var(--border); border-radius: 999px; font-size: 12px; }
+.drawer { background: var(--panel); border-left: 1px solid var(--border); padding: 10px; }
+.tabs { display: flex; gap: 6px; margin-bottom: 8px; }
+.tabs button.active { font-weight: 700; }
+.empty-state { border: 1px dashed var(--border); background: var(--panel); padding: 18px; }
+.topology-grid { display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 8px; }
+.node { border: 1px solid var(--border); background: var(--panel); padding: 8px; border-radius: 8px; }
+.role-unknown { outline: 2px solid #f59e0b; }
+.quick-links { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.warning-node { border-color: #f59e0b; box-shadow: 0 0 0 1px #f59e0b inset; }
