@@ -55,6 +55,8 @@ export function TroubleshootingBridgePage() {
               <Link to={`/topology?site=${d.siteId}`}>Topology</Link>
               {' | '}
               <Link to={`/assurance?site=${d.siteId}&issue=${context.issue}`}>Assurance</Link>
+              {' | '}
+              <Link to={`/provision?site=${d.siteId}&device=${d.id}&issue=${context.issue}`}>Provision</Link>
             </>
           ])}
         />
@@ -64,6 +66,7 @@ export function TroubleshootingBridgePage() {
         <Link to="/assurance">Back to Assurance</Link>
         <Link to={context.siteId ? `/topology?site=${context.siteId}` : '/topology'}>Back to Topology</Link>
         {context.device && <Link to={`/device-360/${context.device.id}`}>Back to Device 360</Link>}
+        <Link to={context.device ? `/provision?site=${context.siteId}&device=${context.device.id}&issue=${context.issue}` : `/provision?site=${context.siteId}&issue=${context.issue}`}>Go Provision</Link>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import { JobsPage } from '../features/jobs/JobsPage';
 import { SettingsPage } from '../features/settings/SettingsPage';
 import { AssurancePage } from '../features/assurance/AssurancePage';
 import { TroubleshootingBridgePage } from '../features/troubleshooting/TroubleshootingBridgePage';
+import { ProvisionPage } from '../features/provision/ProvisionPage';
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
       { path: 'settings', element: <SettingsPage /> },
       { path: 'assurance', element: <AssurancePage /> },
       { path: 'troubleshooting', element: <TroubleshootingBridgePage /> },
+      { path: 'provision', element: <ProvisionPage /> },
       { path: '*', element: <DashboardPage /> }
     ]
   }

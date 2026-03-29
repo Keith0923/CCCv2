@@ -58,6 +58,7 @@ export function Device360Page() {
         <Link to="/topology">Topology</Link>
         <Link to={`/assurance?site=${device.siteId}`}>Assurance Lite</Link>
         <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}`}>Troubleshooting Bridge</Link>
+        <Link to={`/provision?site=${device.siteId}&device=${device.id}`}>Provision</Link>
       </div>
     </div>
   );

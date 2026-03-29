@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 import { seedRepository } from '../repositories/seedRepository';
-import { DeviceRole, DiscoveryJob, PreferredManagementIpPolicy, SeedData } from '../domains/types';
+import { DeviceRole, DiscoveryJob, PreferredManagementIpPolicy, ProvisionTask, SeedData } from '../domains/types';
 
 type ThemeMode = 'light' | 'dark';
 type NewDiscoveryInput = {
@@ -22,6 +22,8 @@ interface AppState {
   data: SeedData;
   addDiscoveryJob: (input: NewDiscoveryInput) => DiscoveryJob;
   normalizeDevice: (input: NormalizationInput) => void;
+  provisionTasks: ProvisionTask[];
+  addProvisionTask: (task: ProvisionTask) => void;
   theme: ThemeMode;
   toggleTheme: () => void;
   selectedDeviceId?: string;
@@ -34,10 +36,12 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState(seedRepository.getAll());
   const [theme, setTheme] = useState<ThemeMode>('light');
   const [selectedDeviceId, setSelectedDeviceId] = useState<string>();
+  const [provisionTasks, setProvisionTasks] = useState<ProvisionTask[]>([]);
 
   const value = useMemo<AppState>(
     () => ({
       data,
+      provisionTasks,
       theme,
       selectedDeviceId,
       setSelectedDeviceId,
@@ -53,9 +57,12 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       normalizeDevice: ({ deviceId, siteId, roleOverride, preferredManagementIpPolicy }) => {
         seedRepository.normalizeDevice(deviceId, { siteId, roleOverride, preferredManagementIpPolicy });
         setData(seedRepository.getAll());
+      },
+      addProvisionTask: (task) => {
+        setProvisionTasks((prev) => [task, ...prev]);
       }
     }),
-    [data, theme, selectedDeviceId]
+    [data, theme, selectedDeviceId, provisionTasks]
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

@@ -109,6 +109,26 @@ export interface Job {
   createdAt: string;
 }
 
+
+
+export interface ProvisionTemplate {
+  id: string;
+  name: string;
+  category: 'day0' | 'access' | 'wireless';
+  parameterSchema: Array<{ key: string; label: string; required: boolean }>;
+}
+
+export interface ProvisionTask {
+  id: string;
+  templateId: string;
+  targetSite?: string;
+  targetDevice?: string;
+  issueContext?: string;
+  parameters: Record<string, string>;
+  status: JobStatus;
+  createdAt: string;
+}
+
 export interface SeedData {
   credentialProfiles: CredentialProfile[];
   discoveryJobs: DiscoveryJob[];
@@ -121,4 +141,5 @@ export interface SeedData {
   issues: Issue[];
   timelineEvents: TimelineEvent[];
   jobs: Job[];
+  provisionTasks?: ProvisionTask[];
 }
