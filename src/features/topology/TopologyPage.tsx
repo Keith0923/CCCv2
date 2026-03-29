@@ -69,6 +69,8 @@ export function TopologyPage() {
                 <Link to={`/device-360/${n.deviceId}`}>Device 360</Link>
                 {' | '}
                 <Link to={`/inventory?job=${d?.sourceDiscoveryJobId ?? ''}`}>Inventory</Link>
+                {' | '}
+                <Link to={`/troubleshooting?device=${n.deviceId}&site=${n.siteId}&issue=${reasons[0] ?? 'unassigned'}`}>Troubleshooting</Link>
               </div>
             );
           })}
@@ -106,12 +108,14 @@ export function TopologyPage() {
               <Link to={`/inventory?job=${device?.sourceDiscoveryJobId ?? ''}`}>Inventory</Link>
               {' / '}
               <Link to={`/device-360/${node.deviceId}`}>Device 360</Link>
+              {' / '}
+              <Link to={`/troubleshooting?device=${node.deviceId}&site=${node.siteId}&issue=${reasons[0] ?? 'unassigned'}`}>Troubleshooting</Link>
             </li>
           ))}
         </ul>
       </Panel>
 
-      <div><Link to="/inventory">Back to Inventory</Link> | <Link to="/assurance">Assurance Lite</Link></div>
+      <div><Link to="/inventory">Back to Inventory</Link> | <Link to="/assurance">Assurance Lite</Link> | <Link to="/troubleshooting">Troubleshooting Bridge</Link></div>
     </div>
   );
 }

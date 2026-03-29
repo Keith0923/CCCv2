@@ -1,6 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import { Panel } from '../../components/Panel';
 import { DataTable } from '../../components/DataTable';
+import { SummaryStrip } from '../../components/SummaryStrip';
 import { useAppState } from '../../app/state';
 import { selectAssuranceSummary } from './selectors';
 
@@ -20,17 +21,29 @@ export function AssurancePage() {
     <div>
       <h1>Assurance Lite</h1>
 
+      <SummaryStrip
+        items={[
+          { label: 'Healthy Sites', value: summary.healthTotals.healthySites },
+          { label: 'Degraded Sites', value: summary.healthTotals.degradedSites },
+          { label: 'Impacted Devices', value: summary.healthTotals.impactedDevices },
+          { label: 'Focused Site', value: siteFocus || 'all' }
+        ]}
+      />
+
       <Panel title="Site Health Summary">
         <DataTable
-          columns={['Site', 'Health', 'Impacted', 'Actions']}
+          columns={['Site', 'Health', 'Impacted', 'Total Devices', 'Actions']}
           rows={summary.siteSummary.map((site) => [
             site.name,
             site.health,
             site.impacted,
+            site.totalDevices,
             <>
               <Link to={`/assurance?site=${site.siteId}`}>Focus</Link>
               {' | '}
               <Link to={`/topology?site=${site.siteId}`}>Topology</Link>
+              {' | '}
+              <Link to={`/troubleshooting?site=${site.siteId}`}>Troubleshooting</Link>
             </>
           ])}
         />
@@ -38,9 +51,9 @@ export function AssurancePage() {
 
       <Panel title="Issue Category Summary">
         <ul>
-          <li>unassigned: {summary.categorySummary.unassigned} <Link to="/assurance?issue=unassigned">filter</Link></li>
-          <li>mis-role: {summary.categorySummary['mis-role']} <Link to="/assurance?issue=mis-role">filter</Link></li>
-          <li>mgmt-ambiguity: {summary.categorySummary['mgmt-ambiguity']} <Link to="/assurance?issue=mgmt-ambiguity">filter</Link></li>
+          <li>unassigned: {summary.categorySummary.unassigned} <Link to="/assurance?issue=unassigned">filter</Link> | <Link to="/troubleshooting?issue=unassigned">bridge</Link></li>
+          <li>mis-role: {summary.categorySummary['mis-role']} <Link to="/assurance?issue=mis-role">filter</Link> | <Link to="/troubleshooting?issue=mis-role">bridge</Link></li>
+          <li>mgmt-ambiguity: {summary.categorySummary['mgmt-ambiguity']} <Link to="/assurance?issue=mgmt-ambiguity">filter</Link> | <Link to="/troubleshooting?issue=mgmt-ambiguity">bridge</Link></li>
         </ul>
       </Panel>
 
@@ -56,6 +69,8 @@ export function AssurancePage() {
               <Link to={`/device-360/${row.device.id}`}>Device 360</Link>
               {' | '}
               <Link to={`/topology?site=${row.device.siteId}`}>Topology</Link>
+              {' | '}
+              <Link to={`/troubleshooting?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Troubleshooting</Link>
             </>
           ])}
         />

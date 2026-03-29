@@ -26,7 +26,8 @@ export function selectAssuranceSummary(data: SeedData, focusedSite?: string) {
         siteId: site.id,
         name: `${site.name} / ${site.building} / ${site.floor}`,
         health: impacted > 0 ? 'degraded' : 'healthy',
-        impacted
+        impacted,
+        totalDevices: devices.length
       };
     });
 
@@ -41,5 +42,11 @@ export function selectAssuranceSummary(data: SeedData, focusedSite?: string) {
     .filter((row) => row.categories.length > 0)
     .sort((a, b) => b.categories.length - a.categories.length);
 
-  return { siteSummary, categorySummary, impactedDevices };
+  const healthTotals = {
+    healthySites: siteSummary.filter((s) => s.health === 'healthy').length,
+    degradedSites: siteSummary.filter((s) => s.health === 'degraded').length,
+    impactedDevices: impactedDevices.length
+  };
+
+  return { siteSummary, categorySummary, impactedDevices, healthTotals };
 }

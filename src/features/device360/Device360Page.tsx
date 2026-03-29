@@ -30,7 +30,7 @@ export function Device360Page() {
 
       <Panel title="Current Issues">
         <ul>{(context?.currentIssues ?? []).map((i) => <li key={i}>{i}</li>)}</ul>
-        <p><Link to={`/assurance?site=${device.siteId}`}>Open in Assurance Lite</Link></p>
+        <p><Link to={`/assurance?site=${device.siteId}`}>Open in Assurance Lite</Link> | <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}&issue=${(context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'}`}>Troubleshooting Bridge</Link></p>
       </Panel>
 
       <Panel title="Discovery Metadata">
@@ -56,6 +56,7 @@ export function Device360Page() {
         <Link to="/inventory">Inventory</Link>
         <Link to="/topology">Topology</Link>
         <Link to={`/assurance?site=${device.siteId}`}>Assurance Lite</Link>
+        <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}`}>Troubleshooting Bridge</Link>
         <a href="#" onClick={(e) => e.preventDefault()}>Related Commands (coming soon)</a>
       </div>
     </div>
