@@ -7,6 +7,7 @@ import { TopologyPage } from '../features/topology/TopologyPage';
 import { Device360Page } from '../features/device360/Device360Page';
 import { JobsPage } from '../features/jobs/JobsPage';
 import { SettingsPage } from '../features/settings/SettingsPage';
+import { AssurancePage } from '../features/assurance/AssurancePage';
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { path: 'device-360/:id', element: <Device360Page /> },
       { path: 'jobs', element: <JobsPage /> },
       { path: 'settings', element: <SettingsPage /> },
+      { path: 'assurance', element: <AssurancePage /> },
       { path: '*', element: <DashboardPage /> }
     ]
   }

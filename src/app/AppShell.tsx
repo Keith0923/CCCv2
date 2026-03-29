@@ -17,6 +17,7 @@ export function AppShell() {
           <NavLink to="/topology">Topology</NavLink>
           <NavLink to="/jobs">Jobs</NavLink>
           <NavLink to="/settings">Settings</NavLink>
+          <NavLink to="/assurance">Assurance</NavLink>
         </nav>
       </aside>
       <main>

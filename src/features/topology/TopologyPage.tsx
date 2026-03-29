@@ -47,6 +47,7 @@ export function TopologyPage() {
           <p>Focused site: {siteFocus}</p>
           <p>Visible nodes: {nodes.length}</p>
           <p>Warnings in focus: {warningNodes.length}</p>
+          <p><Link to={`/assurance?site=${siteFocus}`}>Open Assurance Lite</Link></p>
         </Panel>
       )}
 
@@ -110,7 +111,7 @@ export function TopologyPage() {
         </ul>
       </Panel>
 
-      <div><Link to="/inventory">Back to Inventory</Link></div>
+      <div><Link to="/inventory">Back to Inventory</Link> | <Link to="/assurance">Assurance Lite</Link></div>
     </div>
   );
 }

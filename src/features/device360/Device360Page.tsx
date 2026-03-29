@@ -30,6 +30,7 @@ export function Device360Page() {
 
       <Panel title="Current Issues">
         <ul>{(context?.currentIssues ?? []).map((i) => <li key={i}>{i}</li>)}</ul>
+        <p><Link to={`/assurance?site=${device.siteId}`}>Open in Assurance Lite</Link></p>
       </Panel>
 
       <Panel title="Discovery Metadata">
@@ -54,6 +55,7 @@ export function Device360Page() {
       <div className="quick-links">
         <Link to="/inventory">Inventory</Link>
         <Link to="/topology">Topology</Link>
+        <Link to={`/assurance?site=${device.siteId}`}>Assurance Lite</Link>
         <a href="#" onClick={(e) => e.preventDefault()}>Related Commands (coming soon)</a>
       </div>
     </div>

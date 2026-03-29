@@ -22,13 +22,14 @@ export function DashboardPage() {
         <ul>{data.discoveryResults.map((r) => <li key={r.id}>{r.jobId}: S {r.summary.success} / P {r.summary.partial} / F {r.summary.failed}</li>)}</ul>
       </Panel>
       <Panel title="Recent Important Issues">
-        <ul>{data.issues.map((i) => <li key={i.id}>{i.message}</li>)}</ul>
+        <ul>{data.issues.map((i) => <li key={i.id}>{i.message} <Link to="/assurance">Assurance</Link></li>)}</ul>
       </Panel>
       <div className="quick-links">
         <Link to="/discovery">Go Discovery</Link>
         <Link to="/inventory">Go Inventory</Link>
         <Link to="/topology">Go Topology</Link>
         <Link to="/device-360/dev-2">Go Device 360</Link>
+        <Link to="/assurance">Go Assurance</Link>
       </div>
     </div>
   );
