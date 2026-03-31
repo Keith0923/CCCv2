@@ -31,7 +31,7 @@ export class SeedRepository {
   private data: SeedData = structuredClone(phase1Seed);
 
   getAll(): SeedData {
-    return this.data;
+    return structuredClone(this.data);
   }
 
   addDiscoveryFlow(input: NewDiscoveryInput): DiscoveryJob {

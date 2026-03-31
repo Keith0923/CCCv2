@@ -46,6 +46,8 @@ export function Client360Page() {
         <Link to={`/device-360/${model.client.relatedDeviceId}`}>Back to Device 360</Link>
         <Link to={site ? `/assurance/issues?site=${site}` : '/assurance/issues'}>Back to Issues/Events</Link>
         <Link to={site ? `/troubleshooting?site=${site}&issue=${issue}` : '/troubleshooting'}>Go Troubleshooting</Link>
+        <Link to={`/assurance/path-trace?client=${model.client.id}&site=${model.client.siteId}${issue ? `&issue=${issue}` : ''}`}>Path Trace</Link>
+        <Link to={`/assurance/capture?client=${model.client.id}&site=${model.client.siteId}`}>Capture Lite</Link>
       </div>
     </div>
   );

@@ -37,6 +37,10 @@ export function AssuranceIssuesPage() {
               <Link to={`/troubleshooting?site=${row.siteId}&device=${row.deviceId ?? ''}&issue=${row.category}`}>Troubleshooting</Link>
               {' | '}
               <Link to={`/command-runner?site=${row.siteId}&device=${row.deviceId ?? ''}&issue=${row.category}`}>Command Runner</Link>
+              {' | '}
+              <Link to={`/assurance/path-trace?site=${row.siteId}${row.deviceId ? `&device=${row.deviceId}` : ''}${row.clientId ? `&client=${row.clientId}` : ''}&issue=${row.id}`}>Path Trace</Link>
+              {' | '}
+              <Link to={`/assurance/capture?site=${row.siteId}${row.deviceId ? `&device=${row.deviceId}` : ''}${row.clientId ? `&client=${row.clientId}` : ''}`}>Capture Lite</Link>
             </>
           ])}
         />

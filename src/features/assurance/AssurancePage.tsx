@@ -43,7 +43,7 @@ export function AssurancePage() {
         <p>Range: {trendRange} (<Link to={siteFocus ? `/assurance?site=${siteFocus}&range=1h` : '/assurance?range=1h'}>1h</Link> | <Link to={siteFocus ? `/assurance?site=${siteFocus}&range=24h` : '/assurance?range=24h'}>24h</Link> | <Link to={siteFocus ? `/assurance?site=${siteFocus}&range=7d` : '/assurance?range=7d'}>7d</Link>)</p>
         <p>Average health score: {trend.avgHealth}</p>
         <p>Worst site: {trend.worstSite} / Worst floor: {trend.worstFloor} / Worst client: {trend.worstClient}</p>
-        <p><Link to={siteFocus ? `/assurance/clients?site=${siteFocus}&issue=${issueFocus}` : '/assurance/clients'}>Open Client Health</Link> | <Link to={siteFocus ? `/assurance/issues?site=${siteFocus}&issue=${issueFocus}` : '/assurance/issues'}>Open Issues/Events</Link></p>
+        <p><Link to={siteFocus ? `/assurance/clients?site=${siteFocus}&issue=${issueFocus}` : '/assurance/clients'}>Open Client Health</Link> | <Link to={siteFocus ? `/assurance/issues?site=${siteFocus}&issue=${issueFocus}` : '/assurance/issues'}>Open Issues/Events</Link> | <Link to={siteFocus ? `/assurance/path-trace?site=${siteFocus}` : '/assurance/path-trace'}>Open Path Trace</Link> | <Link to={siteFocus ? `/assurance/capture?site=${siteFocus}` : '/assurance/capture'}>Open Capture Lite</Link></p>
       </Panel>
 
       <Panel title="Site Health Summary">

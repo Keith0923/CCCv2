@@ -27,6 +27,8 @@ import { AdvancedAssurancePage } from '../features/assurance/AdvancedAssurancePa
 import { AssuranceClientsPage } from '../features/assurance/AssuranceClientsPage';
 import { Client360Page } from '../features/assurance/Client360Page';
 import { AssuranceIssuesPage } from '../features/assurance/AssuranceIssuesPage';
+import { AssurancePathTracePage } from '../features/assurance/AssurancePathTracePage';
+import { AssuranceCapturePage } from '../features/assurance/AssuranceCapturePage';
 
 export const router = createBrowserRouter([
   {
@@ -60,6 +62,8 @@ export const router = createBrowserRouter([
       { path: 'assurance/clients', element: <AssuranceClientsPage /> },
       { path: 'client-360/:id', element: <Client360Page /> },
       { path: 'assurance/issues', element: <AssuranceIssuesPage /> },
+      { path: 'assurance/path-trace', element: <AssurancePathTracePage /> },
+      { path: 'assurance/capture', element: <AssuranceCapturePage /> },
       { path: '*', element: <DashboardPage /> }
     ]
   }

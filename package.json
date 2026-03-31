@@ -10,7 +10,8 @@
     "dev:electron": "npm run build:electron && wait-on tcp:5173 && electron dist-electron/main.js",
     "build": "tsc -b && vite build && npm run build:electron",
     "build:electron": "tsc -p tsconfig.electron.json && node scripts/ensure-electron-cjs.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -26,6 +27,7 @@
     "electron": "^36.0.0",
     "typescript": "^5.8.3",
     "vite": "^5.4.19",
-    "wait-on": "^8.0.3"
+    "wait-on": "^8.0.3",
+    "vitest": "^2.1.9"
   }
 }

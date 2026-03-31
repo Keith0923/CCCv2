@@ -38,7 +38,7 @@ export function Device360Page() {
 
       <Panel title="Current Issues">
         <div className="tag-row">{(context?.currentIssues ?? []).map((i) => <IssueTag key={i} value={i.toLowerCase().includes('role') ? 'mis-role' : i.toLowerCase().includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'} />)}</div>
-        <p><Link to={`/assurance?site=${device.siteId}`}>Open in Assurance Lite</Link> | <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}&issue=${(context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'}`}>Troubleshooting Bridge</Link> | <Link to={`/command-runner?site=${device.siteId}&device=${device.id}&issue=${(context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'}`}>Command Runner</Link></p>
+        <p><Link to={`/assurance?site=${device.siteId}`}>Open in Assurance Lite</Link> | <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}&issue=${(context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'}`}>Troubleshooting Bridge</Link> | <Link to={`/command-runner?site=${device.siteId}&device=${device.id}&issue=${(context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'}`}>Command Runner</Link> | <Link to={`/assurance/path-trace?device=${device.id}&site=${device.siteId}`}>Path Trace</Link> | <Link to={`/assurance/capture?device=${device.id}&site=${device.siteId}`}>Capture Lite</Link></p>
       </Panel>
 
       <Panel title="Software Image Status">
@@ -87,6 +87,8 @@ export function Device360Page() {
         <Link to={`/sda/policy?site=${device.siteId}&device=${device.id}`}>Policy Matrix</Link>
         <Link to={`/assurance/clients?site=${device.siteId}`}>Client Health</Link>
         <Link to={`/assurance/issues?site=${device.siteId}`}>Issues/Events</Link>
+        <Link to={`/assurance/path-trace?device=${device.id}&site=${device.siteId}`}>Path Trace</Link>
+        <Link to={`/assurance/capture?device=${device.id}&site=${device.siteId}`}>Capture Lite</Link>
       </div>
     </div>
   );
