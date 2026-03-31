@@ -54,7 +54,7 @@ export function TopologyPage() {
           <p>Focused site: {siteFocus}</p>
           <p>Visible nodes: {nodes.length}</p>
           <p>Warnings in focus: {warningNodes.length}</p>
-          <p>Site health from Assurance: <StatusBadge value={assurance.healthTotals.degradedSites > 0 ? 'degraded' : 'healthy'} /> <Link to={`/assurance?site=${siteFocus}`}>Open Assurance Lite</Link> | <Link to={`/wireless/maps?site=${siteFocus}`}>Open Wireless Maps</Link></p>
+          <p>Site health from Assurance: <StatusBadge value={assurance.healthTotals.degradedSites > 0 ? 'degraded' : 'healthy'} /> <Link to={`/assurance?site=${siteFocus}`}>Open Assurance Lite</Link> | <Link to={`/wireless/maps?site=${siteFocus}`}>Open Wireless Maps</Link> | <Link to={`/sda/fabric?site=${siteFocus}`}>Open Fabric Overview</Link></p>
         </Panel>
       )}
 
@@ -118,7 +118,7 @@ export function TopologyPage() {
         </ul>
       </Panel>
 
-      <div><Link to="/inventory">Back to Inventory</Link> | <Link to="/assurance">Assurance Lite</Link> | <Link to="/troubleshooting">Troubleshooting Bridge</Link> | <Link to={siteFocus ? `/wireless/maps?site=${siteFocus}` : '/wireless/maps'}>Wireless Maps</Link></div>
+      <div><Link to="/inventory">Back to Inventory</Link> | <Link to="/assurance">Assurance Lite</Link> | <Link to="/troubleshooting">Troubleshooting Bridge</Link> | <Link to={siteFocus ? `/wireless/maps?site=${siteFocus}` : '/wireless/maps'}>Wireless Maps</Link> | <Link to={siteFocus ? `/sda/fabric?site=${siteFocus}` : '/sda/fabric'}>Fabric Overview</Link></div>
     </div>
   );
 }

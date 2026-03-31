@@ -83,6 +83,8 @@ export function Device360Page() {
         <Link to={`/compliance?site=${device.siteId}&device=${device.id}`}>Compliance</Link>
         <Link to={`/wireless/maps?site=${device.siteId}&device=${device.id}`}>Wireless Maps</Link>
         <Link to={`/wireless/security?site=${device.siteId}&device=${device.id}`}>Wireless Security</Link>
+        <Link to={`/sda/fabric?site=${device.siteId}&device=${device.id}`}>Fabric Overview</Link>
+        <Link to={`/sda/policy?site=${device.siteId}&device=${device.id}`}>Policy Matrix</Link>
       </div>
     </div>
   );

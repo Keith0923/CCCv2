@@ -59,6 +59,10 @@ export function AssurancePage() {
               <Link to={`/platform?site=${site.siteId}`}>Platform</Link>
               {' | '}
               <Link to={`/wireless/maps?site=${site.siteId}`}>Wireless Maps</Link>
+              {' | '}
+              <Link to={`/assurance/advanced?site=${site.siteId}`}>Advanced Assurance</Link>
+              {' | '}
+              <Link to={`/sda/fabric?site=${site.siteId}`}>Fabric Overview</Link>
             </>
           ])}
         />
@@ -96,6 +100,8 @@ export function AssurancePage() {
               <Link to={`/platform?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Platform</Link>
               {' | '}
               <Link to={`/wireless/security?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Wireless Security</Link>
+              {' | '}
+              <Link to={`/assurance/advanced?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Advanced Assurance</Link>
             </>
           ])}
         />

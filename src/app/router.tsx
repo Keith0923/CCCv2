@@ -21,6 +21,9 @@ import { PlatformEventsPage } from '../features/platform/PlatformEventsPage';
 import { PlatformItsmPage } from '../features/platform/PlatformItsmPage';
 import { WirelessMapsPage } from '../features/wireless/WirelessMapsPage';
 import { WirelessSecurityPage } from '../features/wireless/WirelessSecurityPage';
+import { SdaFabricPage } from '../features/sda/SdaFabricPage';
+import { SdaPolicyPage } from '../features/sda/SdaPolicyPage';
+import { AdvancedAssurancePage } from '../features/assurance/AdvancedAssurancePage';
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +51,9 @@ export const router = createBrowserRouter([
       { path: 'platform/itsm', element: <PlatformItsmPage /> },
       { path: 'wireless/maps', element: <WirelessMapsPage /> },
       { path: 'wireless/security', element: <WirelessSecurityPage /> },
+      { path: 'sda/fabric', element: <SdaFabricPage /> },
+      { path: 'sda/policy', element: <SdaPolicyPage /> },
+      { path: 'assurance/advanced', element: <AdvancedAssurancePage /> },
       { path: '*', element: <DashboardPage /> }
     ]
   }

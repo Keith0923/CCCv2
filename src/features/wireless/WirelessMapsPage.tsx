@@ -63,6 +63,7 @@ export function WirelessMapsPage() {
         <Link to={site ? `/assurance?site=${site}&issue=${issue}` : '/assurance'}>Back to Assurance</Link>
         <Link to={site ? `/topology?site=${site}` : '/topology'}>Back to Topology</Link>
         <Link to={device ? `/device-360/${device}` : '/device-360/dev-1'}>Back to Device 360</Link>
+        <Link to={site ? `/sda/fabric?site=${site}&device=${device}&issue=${issue}` : '/sda/fabric'}>Go Fabric Overview</Link>
         <Link to={site ? `/wireless/security?site=${site}&floor=${floor}&issue=${issue}` : '/wireless/security'}>Go Wireless Security</Link>
       </div>
     </div>
