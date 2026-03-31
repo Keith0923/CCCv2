@@ -15,6 +15,9 @@ import { CommandRunnerPage } from '../features/commandRunner/CommandRunnerPage';
 import { ActivitiesPage } from '../features/activities/ActivitiesPage';
 import { CompliancePage } from '../features/compliance/CompliancePage';
 import { ComplianceDevicePage } from '../features/compliance/ComplianceDevicePage';
+import { PlatformHomePage } from '../features/platform/PlatformHomePage';
+import { PlatformApisPage } from '../features/platform/PlatformApisPage';
+import { PlatformEventsPage } from '../features/platform/PlatformEventsPage';
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +39,9 @@ export const router = createBrowserRouter([
       { path: 'activities', element: <ActivitiesPage /> },
       { path: 'compliance', element: <CompliancePage /> },
       { path: 'compliance/device/:id', element: <ComplianceDevicePage /> },
+      { path: 'platform', element: <PlatformHomePage /> },
+      { path: 'platform/apis', element: <PlatformApisPage /> },
+      { path: 'platform/events', element: <PlatformEventsPage /> },
       { path: '*', element: <DashboardPage /> }
     ]
   }

@@ -40,7 +40,7 @@ export function TroubleshootingBridgePage() {
 
       <Panel title="Recommended Next Step">
         <p>Recommended next view: {context.recommendedNextView}</p>
-        <p><Link to={context.device ? `/command-runner?site=${context.siteId}&device=${context.device.id}&issue=${context.issue}` : `/command-runner?site=${context.siteId}&issue=${context.issue}`}>Open in Command Runner</Link></p>
+        <p><Link to={context.device ? `/command-runner?site=${context.siteId}&device=${context.device.id}&issue=${context.issue}` : `/command-runner?site=${context.siteId}&issue=${context.issue}`}>Open in Command Runner</Link> | <Link to={context.device ? `/platform/events?site=${context.siteId}&device=${context.device.id}&issue=${context.issue}` : `/platform/events?site=${context.siteId}&issue=${context.issue}`}>Open Event Notifications</Link></p>
       </Panel>
 
       <Panel title="Related Targets">
@@ -60,6 +60,8 @@ export function TroubleshootingBridgePage() {
               <Link to={`/provision?site=${d.siteId}&device=${d.id}&issue=${context.issue}`}>Provision</Link>
               {' | '}
               <Link to={`/command-runner?site=${d.siteId}&device=${d.id}&issue=${context.issue}`}>Command Runner</Link>
+              {' | '}
+              <Link to={`/platform?site=${d.siteId}&device=${d.id}&issue=${context.issue}`}>Platform</Link>
             </>
           ])}
         />
@@ -72,6 +74,7 @@ export function TroubleshootingBridgePage() {
         <Link to={context.device ? `/provision?site=${context.siteId}&device=${context.device.id}&issue=${context.issue}` : `/provision?site=${context.siteId}&issue=${context.issue}`}>Go Provision</Link>
         <Link to={context.device ? `/command-runner?site=${context.siteId}&device=${context.device.id}&issue=${context.issue}` : `/command-runner?site=${context.siteId}&issue=${context.issue}`}>Go Command Runner</Link>
         <Link to={context.device ? `/activities?site=${context.siteId}&device=${context.device.id}&issue=${context.issue}` : `/activities?site=${context.siteId}&issue=${context.issue}`}>Recent Activities</Link>
+        <Link to={context.device ? `/platform?site=${context.siteId}&device=${context.device.id}&issue=${context.issue}` : `/platform?site=${context.siteId}&issue=${context.issue}`}>Go Platform</Link>
       </div>
     </div>
   );
