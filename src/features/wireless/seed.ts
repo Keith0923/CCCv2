@@ -21,9 +21,9 @@ export interface WirelessSecurityEventLite {
 export const floorMapSeed: FloorMapLite[] = [
   {
     id: 'map-1',
-    siteId: 'SJC-Campus',
-    building: 'HQ-1',
-    floor: 'Floor-1',
+    siteId: 'site-hq-f1',
+    building: 'Main',
+    floor: '1F',
     aps: [
       { id: 'ap-1', label: 'AP-Lobby', x: 18, y: 24, health: 'healthy' },
       { id: 'ap-2', label: 'AP-East', x: 68, y: 40, health: 'warning' }
@@ -39,9 +39,9 @@ export const floorMapSeed: FloorMapLite[] = [
   },
   {
     id: 'map-2',
-    siteId: 'NYC-Branch',
-    building: 'BR-1',
-    floor: 'Floor-3',
+    siteId: 'site-br1-f1',
+    building: 'Office',
+    floor: '1F',
     aps: [
       { id: 'ap-3', label: 'AP-Core', x: 35, y: 30, health: 'healthy' }
     ],
@@ -51,12 +51,28 @@ export const floorMapSeed: FloorMapLite[] = [
     zones: [
       { id: 'z-3', label: 'Center zone heat', intensity: 'low' }
     ]
+  },
+  {
+    id: 'map-3',
+    siteId: 'site-hq-f2',
+    building: 'Main',
+    floor: '2F',
+    aps: [
+      { id: 'ap-4', label: 'AP-HQ2-West', x: 42, y: 34, health: 'healthy' }
+    ],
+    clients: [
+      { id: 'cl-4', label: 'Client-88', x: 56, y: 48 }
+    ],
+    zones: [
+      { id: 'z-4', label: 'West zone heat', intensity: 'medium' }
+    ]
   }
 ];
 
 export const wirelessSecuritySeed: WirelessSecurityEventLite[] = [
-  { id: 'ws-1', siteId: 'SJC-Campus', floor: 'Floor-1', category: 'rogue', severity: 'high', summary: 'Unknown AP beacon detected near east wing.', relatedAp: 'AP-East' },
-  { id: 'ws-2', siteId: 'SJC-Campus', floor: 'Floor-1', category: 'contained', severity: 'medium', summary: 'Rogue client containment active on AP-East.', relatedAp: 'AP-East' },
-  { id: 'ws-3', siteId: 'NYC-Branch', floor: 'Floor-3', category: 'monitoring', severity: 'low', summary: 'Neighbor AP fingerprint under monitoring.', relatedAp: 'AP-Core' },
-  { id: 'ws-4', siteId: 'NYC-Branch', floor: 'Floor-3', category: 'suspicious', severity: 'medium', summary: 'Suspicious SSID broadcast overlaps corp profile.', relatedAp: 'AP-Core' }
+  { id: 'ws-1', siteId: 'site-hq-f1', floor: '1F', category: 'rogue', severity: 'high', summary: 'Unknown AP beacon detected near east wing.', relatedAp: 'AP-East' },
+  { id: 'ws-2', siteId: 'site-hq-f1', floor: '1F', category: 'contained', severity: 'medium', summary: 'Rogue client containment active on AP-East.', relatedAp: 'AP-East' },
+  { id: 'ws-3', siteId: 'site-br1-f1', floor: '1F', category: 'monitoring', severity: 'low', summary: 'Neighbor AP fingerprint under monitoring.', relatedAp: 'AP-Core' },
+  { id: 'ws-4', siteId: 'site-br1-f1', floor: '1F', category: 'suspicious', severity: 'medium', summary: 'Suspicious SSID broadcast overlaps corp profile.', relatedAp: 'AP-Core' },
+  { id: 'ws-5', siteId: 'site-hq-f2', floor: '2F', category: 'monitoring', severity: 'low', summary: 'aWIPS signature update monitoring on west hall.', relatedAp: 'AP-HQ2-West' }
 ];
