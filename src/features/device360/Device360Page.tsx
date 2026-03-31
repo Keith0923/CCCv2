@@ -5,6 +5,7 @@ import { useAppState } from '../../app/state';
 import { EmptyState } from '../../components/EmptyState';
 import { StatusBadge } from '../../components/StatusBadge';
 import { IssueTag } from '../../components/IssueTag';
+import { selectComplianceDeviceDetail } from '../compliance/selectors';
 
 export function Device360Page() {
   const { id } = useParams();
@@ -19,6 +20,7 @@ export function Device360Page() {
 
   const effectiveRole = device.roleOverride ?? device.roleDetected;
   const imageState = deviceImageStates.find((x) => x.deviceId === device.id);
+  const compliance = selectComplianceDeviceDetail(data, device.id);
 
   return (
     <div>
@@ -47,6 +49,13 @@ export function Device360Page() {
         <p><Link to={`/software/images?site=${device.siteId}&device=${device.id}`}>Open Software Images</Link></p>
       </Panel>
 
+
+      <Panel title="Compliance Status">
+        <p>Status: <StatusBadge value={compliance?.status ?? 'unknown'} /></p>
+        <p>Reason: {compliance?.reasonCategory ?? 'none'}</p>
+        <p><Link to={`/compliance/device/${device.id}`}>Open Compliance Detail</Link></p>
+      </Panel>
+
       <Panel title="Discovery Metadata">
         <p>Source job: {device.sourceDiscoveryJobId}</p>
         <p>Management IP: {device.managementIp}</p>
@@ -71,6 +80,7 @@ export function Device360Page() {
         <Link to={`/software/images?site=${device.siteId}&device=${device.id}`}>Software Images</Link>
         <Link to={`/command-runner?site=${device.siteId}&device=${device.id}`}>Command Runner</Link>
         <Link to={`/activities?site=${device.siteId}&device=${device.id}`}>Activities</Link>
+        <Link to={`/compliance?site=${device.siteId}&device=${device.id}`}>Compliance</Link>
       </div>
     </div>
   );

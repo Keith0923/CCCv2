@@ -53,6 +53,8 @@ export function AssurancePage() {
               <Link to={`/software/images?site=${site.siteId}`}>Software</Link>
               {' | '}
               <Link to={`/activities?site=${site.siteId}`}>Activities</Link>
+              {' | '}
+              <Link to={`/compliance?site=${site.siteId}`}>Compliance</Link>
             </>
           ])}
         />
@@ -84,6 +86,8 @@ export function AssurancePage() {
               <Link to={`/software/images?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Software</Link>
               {' | '}
               <Link to={`/command-runner?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Command Runner</Link>
+              {' | '}
+              <Link to={`/compliance?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Compliance</Link>
             </>
           ])}
         />

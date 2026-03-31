@@ -13,6 +13,8 @@ import { ProvisionPage } from '../features/provision/ProvisionPage';
 import { SoftwareImagesPage } from '../features/software/SoftwareImagesPage';
 import { CommandRunnerPage } from '../features/commandRunner/CommandRunnerPage';
 import { ActivitiesPage } from '../features/activities/ActivitiesPage';
+import { CompliancePage } from '../features/compliance/CompliancePage';
+import { ComplianceDevicePage } from '../features/compliance/ComplianceDevicePage';
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +34,8 @@ export const router = createBrowserRouter([
       { path: 'software/images', element: <SoftwareImagesPage /> },
       { path: 'command-runner', element: <CommandRunnerPage /> },
       { path: 'activities', element: <ActivitiesPage /> },
+      { path: 'compliance', element: <CompliancePage /> },
+      { path: 'compliance/device/:id', element: <ComplianceDevicePage /> },
       { path: '*', element: <DashboardPage /> }
     ]
   }

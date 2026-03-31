@@ -45,6 +45,7 @@ export function ActivitiesPage() {
         <Link to={site ? `/assurance?site=${site}` : '/assurance'}>Back to Assurance</Link>
         <Link to={device ? `/troubleshooting?site=${site}&device=${device}&issue=${issue}` : '/troubleshooting'}>Back to Troubleshooting</Link>
         <Link to={device ? `/command-runner?site=${site}&device=${device}&issue=${issue}` : '/command-runner'}>Back to Command Runner</Link>
+        <Link to={device ? `/compliance?site=${site}&device=${device}&issue=${issue}` : '/compliance'}>Go Compliance</Link>
       </div>
     </div>
   );
