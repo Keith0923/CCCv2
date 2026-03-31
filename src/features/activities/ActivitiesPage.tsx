@@ -21,8 +21,18 @@ export function ActivitiesPage() {
         <p>Recent command runs and task results in one lightweight feed.</p>
       </div>
 
+      <div className="action-bar">
+        <button type="button">Refresh Feed</button>
+        <button type="button">Export CSV</button>
+        <Link to={site ? `/assurance?site=${site}` : '/assurance'}>Assurance</Link>
+      </div>
+
       <Panel title="Context">
         <p>Site: {site || 'all'} / Device: {device || 'not fixed'} / Issue: {issue || 'none'}</p>
+      </Panel>
+
+      <Panel title="Table Metadata">
+        <p>Rows: {rows.length} / Focus site: {site || 'all'} / Focus device: {device || 'none'}</p>
       </Panel>
 
       <Panel title="Recent Activities">

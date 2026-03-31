@@ -22,6 +22,12 @@ export function CompliancePage() {
         <p>Summary of policy/intent drift and non-compliant targets.</p>
       </div>
 
+      <div className="action-bar">
+        <button type="button">Run Check</button>
+        <button type="button">Acknowledge Drift</button>
+        <Link to={site ? `/assurance?site=${site}&issue=${issue}` : '/assurance'}>Assurance</Link>
+      </div>
+
       <SummaryStrip
         items={[
           { label: 'Compliant', value: summary.totals.compliant },
@@ -38,6 +44,10 @@ export function CompliancePage() {
           <li>missing-setting: {summary.reasonSummary['missing-setting']}</li>
           <li>stale-policy: {summary.reasonSummary['stale-policy']}</li>
         </ul>
+      </Panel>
+
+      <Panel title="Table Metadata">
+        <p>Total rows: {summary.rows.length} / Non-compliant: {nonCompliantRows.length} / Focus site: {site || 'all'}</p>
       </Panel>
 
       <Panel title="Non-compliant Devices">

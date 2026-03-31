@@ -21,9 +21,19 @@ export function PlatformEventsPage() {
         <p>Minimal event categories, destinations, and payload preview.</p>
       </div>
 
+      <div className="action-bar">
+        <button type="button">Create Subscription</button>
+        <button type="button">Route Test Event</button>
+        <Link to={site ? `/platform/itsm?site=${site}&issue=${issue}` : '/platform/itsm'}>ITSM</Link>
+      </div>
+
       <Panel title="Event Summary">
         <p>High: {summary.high} / Medium: {summary.medium} / Low: {summary.low}</p>
         <p>Device Issue: {summary.categories.deviceIssue} / Site Health Change: {summary.categories.siteHealthChange} / Compliance Violation: {summary.categories.complianceViolation}</p>
+      </Panel>
+
+      <Panel title="Table Metadata">
+        <p>Events: {visibleEvents.length} / Destinations: {destinationSeed.length} / Focus category: {eventFocus || 'all'}</p>
       </Panel>
 
       <Panel title="Event Categories">

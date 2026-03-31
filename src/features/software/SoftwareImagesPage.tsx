@@ -29,8 +29,18 @@ export function SoftwareImagesPage() {
         <p>Repository → target selection → deploy/activate task → result.</p>
       </div>
 
+      <div className="action-bar">
+        <button type="button">Pre-check</button>
+        <button type="button">Approve Window</button>
+        <Link to={site ? `/assurance?site=${site}` : '/assurance'}>Assurance</Link>
+      </div>
+
       <Panel title="Context">
         <p>Site: {site || 'not specified'} / Device: {device || 'not specified'} / Issue: {issue || 'none'}</p>
+      </Panel>
+
+      <Panel title="Table Metadata">
+        <p>Repo images: {softwareImages.length} / Visible targets: {targets.length} / Focus site: {site || 'all'}</p>
       </Panel>
 
       <Panel title="Image Repository">

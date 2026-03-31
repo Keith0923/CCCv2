@@ -38,6 +38,12 @@ export function InventoryPage() {
         <h1>Inventory</h1>
         <p>Primary workspace for post-discovery normalization.</p>
       </div>
+      <div className="action-bar">
+        <button type="button">Bulk Normalize</button>
+        <button type="button">Export View</button>
+        <Link to="/assurance">Assurance</Link>
+        <Link to="/topology">Topology</Link>
+      </div>
       <FilterBar>
         <select value={assignment} onChange={(e) => setAssignment(e.target.value)}>
           <option value="all">All</option>
@@ -53,6 +59,10 @@ export function InventoryPage() {
           <p>Visible related devices: {focusedCount}</p>
         </Panel>
       )}
+
+      <Panel title="Table Metadata">
+        <p>Rows: {devices.length} / Focused job rows: {jobFocus ? focusedCount : 'n/a'} / Assignment filter: {assignment}</p>
+      </Panel>
 
       <DataTable
         columns={['Device', 'Mgmt IP', 'Reachability', 'Detected Role', 'Admin Override', 'Site', 'Health', 'Issue Hint', 'Source Job', 'Actions']}
@@ -78,6 +88,7 @@ export function InventoryPage() {
 
       {selected && (
         <Panel title="Post-Discovery Normalization">
+          <div className="detail-split">
           <p>Device: {selected.name}</p>
           <p>Current: site={selected.siteId} / role={effectiveRole} / policy={selected.preferredManagementIpPolicy}</p>
 
@@ -102,6 +113,7 @@ export function InventoryPage() {
                 {policyOptions.map((p) => <option key={p} value={p}>{p}</option>)}
               </select>
             </label>
+          </div>
           </div>
         </Panel>
       )}

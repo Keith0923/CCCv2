@@ -22,6 +22,12 @@ export function PlatformItsmPage() {
         <p>Connector → Subscription → Delivery Log for event delivery operations.</p>
       </div>
 
+      <div className="action-bar">
+        <button type="button">Validate Connector</button>
+        <button type="button">Create Ticket Rule</button>
+        <Link to={site ? `/platform/events?site=${site}&issue=${issue}` : '/platform/events'}>Event Bus</Link>
+      </div>
+
       <SummaryStrip
         items={[
           { label: 'Connectors', value: model.totals.connectors },
@@ -30,6 +36,10 @@ export function PlatformItsmPage() {
           { label: 'Deliveries', value: model.totals.deliveries }
         ]}
       />
+
+      <Panel title="Table Metadata">
+        <p>Connector focus: {connector || 'all'} / Event focus: {event || 'all'} / Site: {site || 'all'}</p>
+      </Panel>
 
       <Panel title="Connector List">
         <DataTable
