@@ -26,6 +26,7 @@ export function AppShell() {
           <div>
             <button onClick={toggleTheme}>Theme</button>
             <Link to="/device-360/dev-1">Quick 360</Link>
+            <Link to="/platform">Platform</Link>
           </div>
         </header>
         <section className="content"><Outlet /></section>

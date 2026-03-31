@@ -37,6 +37,10 @@ export function DashboardPage() {
         <Link to="/topology">Go Topology</Link>
         <Link to="/device-360/dev-2">Go Device 360</Link>
         <Link to="/assurance">Go Assurance</Link>
+        <Link to="/platform">Go Platform</Link>
+        <Link to="/platform/apis">Go API Catalog</Link>
+        <Link to="/platform/events">Go Event Notifications</Link>
+        <Link to="/platform/itsm">Go ITSM Workflow</Link>
       </div>
     </div>
   );
