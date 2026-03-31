@@ -47,6 +47,7 @@ export function ActivitiesPage() {
         <Link to={device ? `/command-runner?site=${site}&device=${device}&issue=${issue}` : '/command-runner'}>Back to Command Runner</Link>
         <Link to={device ? `/compliance?site=${site}&device=${device}&issue=${issue}` : '/compliance'}>Go Compliance</Link>
         <Link to={device ? `/platform?site=${site}&device=${device}&issue=${issue}` : '/platform'}>Go Platform</Link>
+        <Link to={device ? `/platform/itsm?site=${site}&issue=${issue}` : '/platform/itsm'}>Go ITSM Workflow</Link>
       </div>
     </div>
   );

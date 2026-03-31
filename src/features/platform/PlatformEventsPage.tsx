@@ -47,6 +47,7 @@ export function PlatformEventsPage() {
       <div className="quick-links">
         <Link to={site ? `/platform?site=${site}&issue=${issue}` : '/platform'}>Back to Platform Home</Link>
         <Link to={site ? `/platform/apis?site=${site}&issue=${issue}` : '/platform/apis'}>Go API Catalog</Link>
+        <Link to={site ? `/platform/itsm?site=${site}&issue=${issue}${eventFocus ? `&event=${eventFocus}` : ''}` : '/platform/itsm'}>Go ITSM Workflow</Link>
         <Link to={site ? `/assurance?site=${site}&issue=${issue}` : '/assurance'}>Back to Assurance</Link>
         <Link to={site ? `/troubleshooting?site=${site}&issue=${issue}` : '/troubleshooting'}>Back to Troubleshooting</Link>
         <Link to={site ? `/activities?site=${site}&issue=${issue}` : '/activities'}>Back to Activities</Link>

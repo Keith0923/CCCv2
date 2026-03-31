@@ -18,6 +18,7 @@ import { ComplianceDevicePage } from '../features/compliance/ComplianceDevicePag
 import { PlatformHomePage } from '../features/platform/PlatformHomePage';
 import { PlatformApisPage } from '../features/platform/PlatformApisPage';
 import { PlatformEventsPage } from '../features/platform/PlatformEventsPage';
+import { PlatformItsmPage } from '../features/platform/PlatformItsmPage';
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +43,7 @@ export const router = createBrowserRouter([
       { path: 'platform', element: <PlatformHomePage /> },
       { path: 'platform/apis', element: <PlatformApisPage /> },
       { path: 'platform/events', element: <PlatformEventsPage /> },
+      { path: 'platform/itsm', element: <PlatformItsmPage /> },
       { path: '*', element: <DashboardPage /> }
     ]
   }

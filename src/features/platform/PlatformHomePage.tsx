@@ -42,6 +42,11 @@ export function PlatformHomePage() {
         <p><Link to={site ? `/platform/events?site=${site}&issue=${issue}` : '/platform/events'}>Open Event Notifications Lite</Link></p>
       </Panel>
 
+      <Panel title="ITSM Workflow Lite Entry">
+        <p>Connector and subscription routing overview for event deliveries.</p>
+        <p><Link to={site ? `/platform/itsm?site=${site}&issue=${issue}` : '/platform/itsm'}>Open ITSM Workflow Lite</Link></p>
+      </Panel>
+
       <div className="quick-links">
         <Link to={site ? `/assurance?site=${site}&issue=${issue}` : '/assurance'}>Back to Assurance</Link>
         <Link to={site ? `/troubleshooting?site=${site}&issue=${issue}` : '/troubleshooting'}>Back to Troubleshooting</Link>
