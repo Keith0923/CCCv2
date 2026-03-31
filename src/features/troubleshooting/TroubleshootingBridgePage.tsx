@@ -40,6 +40,7 @@ export function TroubleshootingBridgePage() {
 
       <Panel title="Recommended Next Step">
         <p>Recommended next view: {context.recommendedNextView}</p>
+        <p><Link to={context.device ? `/command-runner?site=${context.siteId}&device=${context.device.id}&issue=${context.issue}` : `/command-runner?site=${context.siteId}&issue=${context.issue}`}>Open in Command Runner</Link></p>
       </Panel>
 
       <Panel title="Related Targets">
@@ -57,6 +58,8 @@ export function TroubleshootingBridgePage() {
               <Link to={`/assurance?site=${d.siteId}&issue=${context.issue}`}>Assurance</Link>
               {' | '}
               <Link to={`/provision?site=${d.siteId}&device=${d.id}&issue=${context.issue}`}>Provision</Link>
+              {' | '}
+              <Link to={`/command-runner?site=${d.siteId}&device=${d.id}&issue=${context.issue}`}>Command Runner</Link>
             </>
           ])}
         />
@@ -67,6 +70,8 @@ export function TroubleshootingBridgePage() {
         <Link to={context.siteId ? `/topology?site=${context.siteId}` : '/topology'}>Back to Topology</Link>
         {context.device && <Link to={`/device-360/${context.device.id}`}>Back to Device 360</Link>}
         <Link to={context.device ? `/provision?site=${context.siteId}&device=${context.device.id}&issue=${context.issue}` : `/provision?site=${context.siteId}&issue=${context.issue}`}>Go Provision</Link>
+        <Link to={context.device ? `/command-runner?site=${context.siteId}&device=${context.device.id}&issue=${context.issue}` : `/command-runner?site=${context.siteId}&issue=${context.issue}`}>Go Command Runner</Link>
+        <Link to={context.device ? `/activities?site=${context.siteId}&device=${context.device.id}&issue=${context.issue}` : `/activities?site=${context.siteId}&issue=${context.issue}`}>Recent Activities</Link>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 import { seedRepository } from '../repositories/seedRepository';
 import { DeviceRole, DiscoveryJob, PreferredManagementIpPolicy, ProvisionTask, SeedData } from '../domains/types';
+import { CommandRun } from '../features/commandRunner/helpers';
 import { DeviceImageState, SoftwareTask, initialDeviceImageStates } from '../features/software/seed';
 
 type ThemeMode = 'light' | 'dark';
@@ -26,9 +27,11 @@ interface AppState {
   provisionTasks: ProvisionTask[];
   addProvisionTask: (task: ProvisionTask) => void;
   softwareTasks: SoftwareTask[];
+  commandRuns: CommandRun[];
   deviceImageStates: DeviceImageState[];
   addSoftwareTask: (task: SoftwareTask) => void;
   applySoftwareTaskResult: (task: SoftwareTask) => void;
+  addCommandRun: (run: CommandRun) => void;
   theme: ThemeMode;
   toggleTheme: () => void;
   selectedDeviceId?: string;
@@ -43,6 +46,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [selectedDeviceId, setSelectedDeviceId] = useState<string>();
   const [provisionTasks, setProvisionTasks] = useState<ProvisionTask[]>([]);
   const [softwareTasks, setSoftwareTasks] = useState<SoftwareTask[]>([]);
+  const [commandRuns, setCommandRuns] = useState<CommandRun[]>([]);
   const [deviceImageStates, setDeviceImageStates] = useState<DeviceImageState[]>(initialDeviceImageStates);
 
   const value = useMemo<AppState>(
@@ -50,6 +54,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       data,
       provisionTasks,
       softwareTasks,
+      commandRuns,
       deviceImageStates,
       theme,
       selectedDeviceId,
@@ -73,6 +78,10 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       addSoftwareTask: (task) => {
         setSoftwareTasks((prev) => [task, ...prev]);
       },
+
+      addCommandRun: (run) => {
+        setCommandRuns((prev) => [run, ...prev]);
+      },
       applySoftwareTaskResult: (task) => {
         setDeviceImageStates((prev) => prev.map((state) => {
           if (task.targetDevice && state.deviceId !== task.targetDevice) return state;
@@ -82,7 +91,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         }));
       }
     }),
-    [data, theme, selectedDeviceId, provisionTasks, softwareTasks, deviceImageStates]
+    [data, theme, selectedDeviceId, provisionTasks, softwareTasks, commandRuns, deviceImageStates]
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

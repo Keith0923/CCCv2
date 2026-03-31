@@ -36,7 +36,7 @@ export function Device360Page() {
 
       <Panel title="Current Issues">
         <div className="tag-row">{(context?.currentIssues ?? []).map((i) => <IssueTag key={i} value={i.toLowerCase().includes('role') ? 'mis-role' : i.toLowerCase().includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'} />)}</div>
-        <p><Link to={`/assurance?site=${device.siteId}`}>Open in Assurance Lite</Link> | <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}&issue=${(context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'}`}>Troubleshooting Bridge</Link></p>
+        <p><Link to={`/assurance?site=${device.siteId}`}>Open in Assurance Lite</Link> | <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}&issue=${(context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'}`}>Troubleshooting Bridge</Link> | <Link to={`/command-runner?site=${device.siteId}&device=${device.id}&issue=${(context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'}`}>Command Runner</Link></p>
       </Panel>
 
       <Panel title="Software Image Status">
@@ -69,6 +69,8 @@ export function Device360Page() {
         <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}`}>Troubleshooting Bridge</Link>
         <Link to={`/provision?site=${device.siteId}&device=${device.id}`}>Provision</Link>
         <Link to={`/software/images?site=${device.siteId}&device=${device.id}`}>Software Images</Link>
+        <Link to={`/command-runner?site=${device.siteId}&device=${device.id}`}>Command Runner</Link>
+        <Link to={`/activities?site=${device.siteId}&device=${device.id}`}>Activities</Link>
       </div>
     </div>
   );

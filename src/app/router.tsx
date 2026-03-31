@@ -11,6 +11,8 @@ import { AssurancePage } from '../features/assurance/AssurancePage';
 import { TroubleshootingBridgePage } from '../features/troubleshooting/TroubleshootingBridgePage';
 import { ProvisionPage } from '../features/provision/ProvisionPage';
 import { SoftwareImagesPage } from '../features/software/SoftwareImagesPage';
+import { CommandRunnerPage } from '../features/commandRunner/CommandRunnerPage';
+import { ActivitiesPage } from '../features/activities/ActivitiesPage';
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +30,8 @@ export const router = createBrowserRouter([
       { path: 'troubleshooting', element: <TroubleshootingBridgePage /> },
       { path: 'provision', element: <ProvisionPage /> },
       { path: 'software/images', element: <SoftwareImagesPage /> },
+      { path: 'command-runner', element: <CommandRunnerPage /> },
+      { path: 'activities', element: <ActivitiesPage /> },
       { path: '*', element: <DashboardPage /> }
     ]
   }

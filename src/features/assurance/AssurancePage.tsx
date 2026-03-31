@@ -51,6 +51,8 @@ export function AssurancePage() {
               <Link to={`/troubleshooting?site=${site.siteId}`}>Troubleshooting</Link>
               {' | '}
               <Link to={`/software/images?site=${site.siteId}`}>Software</Link>
+              {' | '}
+              <Link to={`/activities?site=${site.siteId}`}>Activities</Link>
             </>
           ])}
         />
@@ -58,9 +60,9 @@ export function AssurancePage() {
 
       <Panel title="Issue Category Summary">
         <ul>
-          <li><IssueTag value="unassigned" /> {summary.categorySummary.unassigned} <Link to="/assurance?issue=unassigned">filter</Link> | <Link to="/troubleshooting?issue=unassigned">bridge</Link></li>
-          <li><IssueTag value="mis-role" /> {summary.categorySummary['mis-role']} <Link to="/assurance?issue=mis-role">filter</Link> | <Link to="/troubleshooting?issue=mis-role">bridge</Link></li>
-          <li><IssueTag value="mgmt-ambiguity" /> {summary.categorySummary['mgmt-ambiguity']} <Link to="/assurance?issue=mgmt-ambiguity">filter</Link> | <Link to="/troubleshooting?issue=mgmt-ambiguity">bridge</Link> | <Link to="/software/images?issue=mgmt-ambiguity">software</Link></li>
+          <li><IssueTag value="unassigned" /> {summary.categorySummary.unassigned} <Link to="/assurance?issue=unassigned">filter</Link> | <Link to="/troubleshooting?issue=unassigned">bridge</Link> | <Link to="/command-runner?issue=unassigned">command</Link></li>
+          <li><IssueTag value="mis-role" /> {summary.categorySummary['mis-role']} <Link to="/assurance?issue=mis-role">filter</Link> | <Link to="/troubleshooting?issue=mis-role">bridge</Link> | <Link to="/command-runner?issue=mis-role">command</Link></li>
+          <li><IssueTag value="mgmt-ambiguity" /> {summary.categorySummary['mgmt-ambiguity']} <Link to="/assurance?issue=mgmt-ambiguity">filter</Link> | <Link to="/troubleshooting?issue=mgmt-ambiguity">bridge</Link> | <Link to="/software/images?issue=mgmt-ambiguity">software</Link> | <Link to="/command-runner?issue=mgmt-ambiguity">command</Link></li>
         </ul>
       </Panel>
 
@@ -80,6 +82,8 @@ export function AssurancePage() {
               <Link to={`/troubleshooting?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Troubleshooting</Link>
               {' | '}
               <Link to={`/software/images?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Software</Link>
+              {' | '}
+              <Link to={`/command-runner?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Command Runner</Link>
             </>
           ])}
         />
