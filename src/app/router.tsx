@@ -10,6 +10,7 @@ import { SettingsPage } from '../features/settings/SettingsPage';
 import { AssurancePage } from '../features/assurance/AssurancePage';
 import { TroubleshootingBridgePage } from '../features/troubleshooting/TroubleshootingBridgePage';
 import { ProvisionPage } from '../features/provision/ProvisionPage';
+import { SoftwareImagesPage } from '../features/software/SoftwareImagesPage';
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
       { path: 'assurance', element: <AssurancePage /> },
       { path: 'troubleshooting', element: <TroubleshootingBridgePage /> },
       { path: 'provision', element: <ProvisionPage /> },
+      { path: 'software/images', element: <SoftwareImagesPage /> },
       { path: '*', element: <DashboardPage /> }
     ]
   }

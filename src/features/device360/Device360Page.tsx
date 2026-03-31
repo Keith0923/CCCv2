@@ -8,7 +8,7 @@ import { IssueTag } from '../../components/IssueTag';
 
 export function Device360Page() {
   const { id } = useParams();
-  const { data } = useAppState();
+  const { data, deviceImageStates } = useAppState();
   const device = data.devices.find((d) => d.id === id);
 
   const context = useMemo(() => data.device360Contexts.find((d) => d.deviceId === id), [data.device360Contexts, id]);
@@ -18,6 +18,7 @@ export function Device360Page() {
   if (!device) return <EmptyState title="Device not found" description="Select a device from inventory or topology." />;
 
   const effectiveRole = device.roleOverride ?? device.roleDetected;
+  const imageState = deviceImageStates.find((x) => x.deviceId === device.id);
 
   return (
     <div>
@@ -36,6 +37,14 @@ export function Device360Page() {
       <Panel title="Current Issues">
         <div className="tag-row">{(context?.currentIssues ?? []).map((i) => <IssueTag key={i} value={i.toLowerCase().includes('role') ? 'mis-role' : i.toLowerCase().includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'} />)}</div>
         <p><Link to={`/assurance?site=${device.siteId}`}>Open in Assurance Lite</Link> | <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}&issue=${(context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'}`}>Troubleshooting Bridge</Link></p>
+      </Panel>
+
+      <Panel title="Software Image Status">
+        <p>Current image: {imageState?.currentImage ?? 'unknown'}</p>
+        <p>Target image: {imageState?.targetImage ?? '-'}</p>
+        <p>Eligibility: <StatusBadge value={imageState?.eligible ? 'eligible' : 'ineligible'} /></p>
+        <p>Last software task: <StatusBadge value={imageState?.lastTaskStatus ?? 'none'} /></p>
+        <p><Link to={`/software/images?site=${device.siteId}&device=${device.id}`}>Open Software Images</Link></p>
       </Panel>
 
       <Panel title="Discovery Metadata">
@@ -59,6 +68,7 @@ export function Device360Page() {
         <Link to={`/assurance?site=${device.siteId}`}>Assurance Lite</Link>
         <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}`}>Troubleshooting Bridge</Link>
         <Link to={`/provision?site=${device.siteId}&device=${device.id}`}>Provision</Link>
+        <Link to={`/software/images?site=${device.siteId}&device=${device.id}`}>Software Images</Link>
       </div>
     </div>
   );

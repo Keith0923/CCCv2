@@ -70,7 +70,8 @@ export function InventoryPage() {
             <button onClick={() => setSelectedDeviceId(d.id)}>Normalize</button>
             <Link to={`/topology?site=${d.siteId}`}>Topology</Link>{' '}
             <Link to={`/device-360/${d.id}`}>Device 360</Link>{' '}
-            <Link to={`/provision?site=${d.siteId}&device=${d.id}`}>Provision</Link>
+            <Link to={`/provision?site=${d.siteId}&device=${d.id}`}>Provision</Link>{' '}
+            <Link to={`/software/images?site=${d.siteId}&device=${d.id}`}>Software</Link>
           </>
         ])}
       />

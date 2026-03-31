@@ -49,6 +49,8 @@ export function AssurancePage() {
               <Link to={`/topology?site=${site.siteId}`}>Topology</Link>
               {' | '}
               <Link to={`/troubleshooting?site=${site.siteId}`}>Troubleshooting</Link>
+              {' | '}
+              <Link to={`/software/images?site=${site.siteId}`}>Software</Link>
             </>
           ])}
         />
@@ -58,7 +60,7 @@ export function AssurancePage() {
         <ul>
           <li><IssueTag value="unassigned" /> {summary.categorySummary.unassigned} <Link to="/assurance?issue=unassigned">filter</Link> | <Link to="/troubleshooting?issue=unassigned">bridge</Link></li>
           <li><IssueTag value="mis-role" /> {summary.categorySummary['mis-role']} <Link to="/assurance?issue=mis-role">filter</Link> | <Link to="/troubleshooting?issue=mis-role">bridge</Link></li>
-          <li><IssueTag value="mgmt-ambiguity" /> {summary.categorySummary['mgmt-ambiguity']} <Link to="/assurance?issue=mgmt-ambiguity">filter</Link> | <Link to="/troubleshooting?issue=mgmt-ambiguity">bridge</Link></li>
+          <li><IssueTag value="mgmt-ambiguity" /> {summary.categorySummary['mgmt-ambiguity']} <Link to="/assurance?issue=mgmt-ambiguity">filter</Link> | <Link to="/troubleshooting?issue=mgmt-ambiguity">bridge</Link> | <Link to="/software/images?issue=mgmt-ambiguity">software</Link></li>
         </ul>
       </Panel>
 
@@ -76,6 +78,8 @@ export function AssurancePage() {
               <Link to={`/topology?site=${row.device.siteId}`}>Topology</Link>
               {' | '}
               <Link to={`/troubleshooting?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Troubleshooting</Link>
+              {' | '}
+              <Link to={`/software/images?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Software</Link>
             </>
           ])}
         />
