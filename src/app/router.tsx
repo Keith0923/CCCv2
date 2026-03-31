@@ -24,6 +24,9 @@ import { WirelessSecurityPage } from '../features/wireless/WirelessSecurityPage'
 import { SdaFabricPage } from '../features/sda/SdaFabricPage';
 import { SdaPolicyPage } from '../features/sda/SdaPolicyPage';
 import { AdvancedAssurancePage } from '../features/assurance/AdvancedAssurancePage';
+import { AssuranceClientsPage } from '../features/assurance/AssuranceClientsPage';
+import { Client360Page } from '../features/assurance/Client360Page';
+import { AssuranceIssuesPage } from '../features/assurance/AssuranceIssuesPage';
 
 export const router = createBrowserRouter([
   {
@@ -54,6 +57,9 @@ export const router = createBrowserRouter([
       { path: 'sda/fabric', element: <SdaFabricPage /> },
       { path: 'sda/policy', element: <SdaPolicyPage /> },
       { path: 'assurance/advanced', element: <AdvancedAssurancePage /> },
+      { path: 'assurance/clients', element: <AssuranceClientsPage /> },
+      { path: 'client-360/:id', element: <Client360Page /> },
+      { path: 'assurance/issues', element: <AssuranceIssuesPage /> },
       { path: '*', element: <DashboardPage /> }
     ]
   }

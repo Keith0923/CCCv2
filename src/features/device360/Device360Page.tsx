@@ -85,6 +85,8 @@ export function Device360Page() {
         <Link to={`/wireless/security?site=${device.siteId}&device=${device.id}`}>Wireless Security</Link>
         <Link to={`/sda/fabric?site=${device.siteId}&device=${device.id}`}>Fabric Overview</Link>
         <Link to={`/sda/policy?site=${device.siteId}&device=${device.id}`}>Policy Matrix</Link>
+        <Link to={`/assurance/clients?site=${device.siteId}`}>Client Health</Link>
+        <Link to={`/assurance/issues?site=${device.siteId}`}>Issues/Events</Link>
       </div>
     </div>
   );
