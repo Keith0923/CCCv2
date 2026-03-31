@@ -57,6 +57,8 @@ export function AssurancePage() {
               <Link to={`/compliance?site=${site.siteId}`}>Compliance</Link>
               {' | '}
               <Link to={`/platform?site=${site.siteId}`}>Platform</Link>
+              {' | '}
+              <Link to={`/wireless/maps?site=${site.siteId}`}>Wireless Maps</Link>
             </>
           ])}
         />
@@ -92,6 +94,8 @@ export function AssurancePage() {
               <Link to={`/compliance?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Compliance</Link>
               {' | '}
               <Link to={`/platform?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Platform</Link>
+              {' | '}
+              <Link to={`/wireless/security?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Wireless Security</Link>
             </>
           ])}
         />

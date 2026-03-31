@@ -19,6 +19,8 @@ import { PlatformHomePage } from '../features/platform/PlatformHomePage';
 import { PlatformApisPage } from '../features/platform/PlatformApisPage';
 import { PlatformEventsPage } from '../features/platform/PlatformEventsPage';
 import { PlatformItsmPage } from '../features/platform/PlatformItsmPage';
+import { WirelessMapsPage } from '../features/wireless/WirelessMapsPage';
+import { WirelessSecurityPage } from '../features/wireless/WirelessSecurityPage';
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +46,8 @@ export const router = createBrowserRouter([
       { path: 'platform/apis', element: <PlatformApisPage /> },
       { path: 'platform/events', element: <PlatformEventsPage /> },
       { path: 'platform/itsm', element: <PlatformItsmPage /> },
+      { path: 'wireless/maps', element: <WirelessMapsPage /> },
+      { path: 'wireless/security', element: <WirelessSecurityPage /> },
       { path: '*', element: <DashboardPage /> }
     ]
   }

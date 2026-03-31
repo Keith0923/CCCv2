@@ -81,6 +81,8 @@ export function Device360Page() {
         <Link to={`/command-runner?site=${device.siteId}&device=${device.id}`}>Command Runner</Link>
         <Link to={`/activities?site=${device.siteId}&device=${device.id}`}>Activities</Link>
         <Link to={`/compliance?site=${device.siteId}&device=${device.id}`}>Compliance</Link>
+        <Link to={`/wireless/maps?site=${device.siteId}&device=${device.id}`}>Wireless Maps</Link>
+        <Link to={`/wireless/security?site=${device.siteId}&device=${device.id}`}>Wireless Security</Link>
       </div>
     </div>
   );
