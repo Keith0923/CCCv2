@@ -11,6 +11,7 @@ import { TableSection } from '../../components/TableSection';
 import { DetailRailSection } from '../../components/DetailRailSection';
 import { ActionBar } from '../../components/ActionBar';
 import { ContextHeader } from '../../components/ContextHeader';
+import { DrillDownLink } from '../../components/DrillDownLink';
 
 const roleOptions: DeviceRole[] = ['core', 'distribution', 'access', 'wireless-controller', 'unknown'];
 const policyOptions: PreferredManagementIpPolicy[] = ['loopback', 'interface-vlan', 'system'];
@@ -95,9 +96,9 @@ export function InventoryPage() {
 
             <DetailRailSection title="Next Actions">
               <div className="quick-links">
-                <Link to={`/provision?site=${selected.siteId}&device=${selected.id}`}>Provision</Link>
-                <Link to={`/software/images?site=${selected.siteId}&device=${selected.id}`}>Software</Link>
-                <Link to={`/compliance?site=${selected.siteId}&device=${selected.id}`}>Compliance</Link>
+                <DrillDownLink to={`/provision?site=${selected.siteId}&device=${selected.id}`} label="Provision" reason="Reason: check intent deployment status" />
+                <DrillDownLink to={`/software/images?site=${selected.siteId}&device=${selected.id}`} label="Software" reason="Reason: verify image lifecycle state" />
+                <DrillDownLink to={`/compliance?site=${selected.siteId}&device=${selected.id}`} label="Compliance" reason="Reason: validate policy alignment" />
               </div>
             </DetailRailSection>
           </div>

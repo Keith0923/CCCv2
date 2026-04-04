@@ -14,6 +14,7 @@ import { TableSection } from '../../components/TableSection';
 import { DataTable } from '../../components/DataTable';
 import { DetailRailSection } from '../../components/DetailRailSection';
 import { ContextHeader } from '../../components/ContextHeader';
+import { DrillDownLink } from '../../components/DrillDownLink';
 
 export function AssurancePage() {
   const { data, setSelectedDeviceId } = useAppState();
@@ -97,10 +98,10 @@ export function AssurancePage() {
           <DetailRailSection title="Drill-down Actions">
             <div className="quick-links">
               {selectedIssue?.deviceId && <button onClick={() => setSelectedDeviceId(selectedIssue.deviceId)}>Set Global Device</button>}
-              {selectedIssue?.deviceId && <Link to={`/device-360/${selectedIssue.deviceId}`}>Device 360</Link>}
-              {selectedIssue?.clientId && <Link to={`/client-360/${selectedIssue.clientId}?site=${selectedIssue.siteId}`}>Client 360</Link>}
-              <Link to={selectedIssue ? `/troubleshooting?site=${selectedIssue.siteId}&device=${selectedIssue.deviceId ?? ''}&issue=${selectedIssue.category}` : '/troubleshooting'}>Troubleshooting</Link>
-              <Link to={selectedIssue ? `/assurance/path-trace?site=${selectedIssue.siteId}&issue=${selectedIssue.id}` : '/assurance/path-trace'}>Path Trace</Link>
+              {selectedIssue?.deviceId && <DrillDownLink to={`/device-360/${selectedIssue.deviceId}`} label="Device 360" reason="Reason: validate impacted device context" />}
+              {selectedIssue?.clientId && <DrillDownLink to={`/client-360/${selectedIssue.clientId}?site=${selectedIssue.siteId}`} label="Client 360" reason="Reason: validate client impact scope" />}
+              <DrillDownLink to={selectedIssue ? `/troubleshooting?site=${selectedIssue.siteId}&device=${selectedIssue.deviceId ?? ''}&issue=${selectedIssue.category}` : '/troubleshooting'} label="Troubleshooting" reason="Reason: isolate probable fault domain" />
+              <DrillDownLink to={selectedIssue ? `/assurance/path-trace?site=${selectedIssue.siteId}&issue=${selectedIssue.id}` : '/assurance/path-trace'} label="Path Trace" reason="Reason: verify end-to-end path health" />
             </div>
           </DetailRailSection>
         </div>

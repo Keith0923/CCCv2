@@ -538,3 +538,15 @@ body {
   color: var(--text-soft);
   font-weight: 600;
 }
+
+.drilldown-link-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-right: 10px;
+}
+.drilldown-reason {
+  font-size: 10px;
+  color: var(--text-soft);
+  line-height: 1.2;
+}
