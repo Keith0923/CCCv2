@@ -131,3 +131,25 @@ body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--bg); 
 .assurance-tabs a { border: 1px solid var(--border); border-radius: 999px; padding: 4px 9px; text-decoration: none; color: var(--text); background: var(--panel); font-size: 12px; }
 .investigation-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
 .right-ops-rail { display: grid; gap: 8px; }
+
+
+.cc-page-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.cc-page-header h1 { margin: 0; font-size: 19px; }
+.cc-page-header p { margin: 0; color: var(--muted); }
+.cc-page-controls { display: flex; gap: 8px; }
+.cc-filter-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.cc-filter-strip select, .cc-filter-strip button { border: 1px solid var(--border); border-radius: 6px; background: var(--panel); color: var(--text); padding: 5px 8px; }
+.cc-action-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.cc-action-bar button, .cc-action-bar a { border: 1px solid var(--border); border-radius: 6px; background: var(--panel-3); color: var(--text); padding: 5px 9px; text-decoration: none; }
+.cc-dashlet { border: 1px solid var(--border); border-radius: 8px; background: var(--panel); box-shadow: var(--shadow); }
+.cc-dashlet > header { padding: 7px 10px; border-bottom: 1px solid var(--border); background: var(--panel-2); font-weight: 700; font-size: 12px; }
+.cc-dashlet > div { padding: 9px 10px; }
+.cc-table-section { border: 1px solid var(--border); border-radius: 8px; background: var(--panel); margin-bottom: 10px; box-shadow: var(--shadow); }
+.cc-table-section > header { display: flex; justify-content: space-between; gap: 8px; padding: 7px 10px; border-bottom: 1px solid var(--border); background: var(--panel-2); font-size: 12px; }
+.cc-table-section > div { padding: 10px; }
+.cc-detail-rail-section { border: 1px solid var(--border); border-radius: 8px; background: var(--panel); box-shadow: var(--shadow); }
+.cc-detail-rail-section > header { padding: 7px 9px; border-bottom: 1px solid var(--border); background: var(--panel-2); font-weight: 700; font-size: 12px; }
+.cc-detail-rail-section > div { padding: 9px; }
+.cc-section-tabs { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+.cc-section-tabs a { border: 1px solid var(--border); border-radius: 999px; background: var(--panel); color: var(--text); padding: 4px 9px; text-decoration: none; font-size: 12px; }
+.selected-row { background: color-mix(in srgb, var(--accent) 14%, transparent); }
