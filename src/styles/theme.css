@@ -335,3 +335,56 @@ body {
 .zone-low { background: color-mix(in srgb, var(--ok) 18%, transparent); }
 .zone-medium { background: color-mix(in srgb, var(--warn) 18%, transparent); }
 .zone-high { background: color-mix(in srgb, var(--danger) 18%, transparent); }
+
+
+.dashboard-control-bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr)) auto 1fr;
+  gap: 8px;
+  align-items: end;
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--surface), var(--surface-strong));
+  box-shadow: var(--shadow-sm);
+}
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 10px; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; }
+.dashboard-control-bar select,
+.dashboard-control-bar button {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.control-context { font-size: 11px; color: var(--text-soft); text-align: right; }
+
+.dashboard-kpi-grid { display: grid; grid-template-columns: 1.2fr repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+.kpi-card {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--surface), var(--surface-muted));
+  padding: 10px;
+  box-shadow: var(--shadow-sm);
+}
+.kpi-card small { color: var(--text-soft); font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; }
+.kpi-card strong { display: block; font-size: 24px; line-height: 1.15; margin: 4px 0; }
+.kpi-card p { margin: 0; font-size: 11px; color: var(--text-soft); }
+.kpi-card.kpi-primary {
+  background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 14%, var(--surface)), var(--surface));
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--border-soft));
+  box-shadow: var(--shadow-md);
+}
+
+.dashboard-layout { display: grid; grid-template-columns: 1.7fr 1fr; gap: 12px; }
+.dashboard-main-grid { display: grid; grid-template-columns: repeat(2, minmax(280px, 1fr)); gap: 10px; }
+.dashboard-main-grid > :first-child { grid-column: 1 / -1; }
+.dashboard-rail-bridge {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface-muted) 80%, transparent), var(--surface));
+  border-left: 1px solid var(--border-soft);
+  padding-left: 10px;
+}
+.dashboard-main-grid .cc-dashlet > header { font-size: 12px; font-weight: 720; }
