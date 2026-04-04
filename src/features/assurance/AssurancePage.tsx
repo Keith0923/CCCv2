@@ -13,11 +13,15 @@ import { SectionTabs } from '../../components/SectionTabs';
 import { TableSection } from '../../components/TableSection';
 import { DataTable } from '../../components/DataTable';
 import { DetailRailSection } from '../../components/DetailRailSection';
+import { ContextHeader } from '../../components/ContextHeader';
+import { DrillDownLink } from '../../components/DrillDownLink';
 
 export function AssurancePage() {
   const { data, setSelectedDeviceId } = useAppState();
   const [params] = useSearchParams();
   const siteFocus = params.get('site') ?? '';
+  const deviceFocus = params.get('device') ?? '';
+  const issueFocus = params.get('issue') ?? '';
   const trendRange = (params.get('range') as '1h' | '24h' | '7d' | null) ?? '24h';
   const summary = selectAssuranceSummary(data, siteFocus || undefined);
   const trend = selectAssuranceTrend(trendRange);
@@ -31,6 +35,7 @@ export function AssurancePage() {
   return (
     <div>
       <PageHeader title="Assurance Monitoring Hub" subtitle="Health and issue drill-down dashboard." />
+      <ContextHeader site={siteFocus || 'all'} device={deviceFocus} issue={issueFocus} time={trendRange} />
 
       <FilterStrip>
         <select><option>Time: {trendRange}</option><option>1h</option><option>24h</option><option>7d</option></select>
@@ -93,10 +98,10 @@ export function AssurancePage() {
           <DetailRailSection title="Drill-down Actions">
             <div className="quick-links">
               {selectedIssue?.deviceId && <button onClick={() => setSelectedDeviceId(selectedIssue.deviceId)}>Set Global Device</button>}
-              {selectedIssue?.deviceId && <Link to={`/device-360/${selectedIssue.deviceId}`}>Device 360</Link>}
-              {selectedIssue?.clientId && <Link to={`/client-360/${selectedIssue.clientId}?site=${selectedIssue.siteId}`}>Client 360</Link>}
-              <Link to={selectedIssue ? `/troubleshooting?site=${selectedIssue.siteId}&device=${selectedIssue.deviceId ?? ''}&issue=${selectedIssue.category}` : '/troubleshooting'}>Troubleshooting</Link>
-              <Link to={selectedIssue ? `/assurance/path-trace?site=${selectedIssue.siteId}&issue=${selectedIssue.id}` : '/assurance/path-trace'}>Path Trace</Link>
+              {selectedIssue?.deviceId && <DrillDownLink to={`/device-360/${selectedIssue.deviceId}`} label="Device 360" reason="Reason: validate impacted device context" />}
+              {selectedIssue?.clientId && <DrillDownLink to={`/client-360/${selectedIssue.clientId}?site=${selectedIssue.siteId}`} label="Client 360" reason="Reason: validate client impact scope" />}
+              <DrillDownLink to={selectedIssue ? `/troubleshooting?site=${selectedIssue.siteId}&device=${selectedIssue.deviceId ?? ''}&issue=${selectedIssue.category}` : '/troubleshooting'} label="Troubleshooting" reason="Reason: isolate probable fault domain" />
+              <DrillDownLink to={selectedIssue ? `/assurance/path-trace?site=${selectedIssue.siteId}&issue=${selectedIssue.id}` : '/assurance/path-trace'} label="Path Trace" reason="Reason: verify end-to-end path health" />
             </div>
           </DetailRailSection>
         </div>

@@ -6,6 +6,8 @@ import { useMemo, useState } from 'react';
 import { selectAssuranceSummary } from '../assurance/selectors';
 import { StatusBadge } from '../../components/StatusBadge';
 import { IssueTag } from '../../components/IssueTag';
+import { ContextHeader } from '../../components/ContextHeader';
+import { DrillDownLink } from '../../components/DrillDownLink';
 
 function warningReasons(device: { assignmentState: string; roleDetected: string; roleOverride?: string; reachability: string }) {
   const reasons: string[] = [];
@@ -20,6 +22,9 @@ export function TopologyPage() {
   const { data } = useAppState();
   const [params] = useSearchParams();
   const siteFocus = params.get('site') ?? '';
+  const deviceFocus = params.get('device') ?? '';
+  const issueFocus = params.get('issue') ?? '';
+  const timeFocus = params.get('time') ?? '';
   const [selectedLinkId, setSelectedLinkId] = useState<string>('');
   const assurance = selectAssuranceSummary(data, siteFocus || undefined);
 
@@ -48,6 +53,7 @@ export function TopologyPage() {
         <h1>Topology</h1>
         <p>Reflection view for site context and connectivity posture.</p>
       </div>
+      <ContextHeader site={siteFocus || 'all'} device={deviceFocus} issue={issueFocus} time={timeFocus || 'current'} />
 
       {siteFocus && (
         <Panel title="Site Focus">
@@ -69,11 +75,9 @@ export function TopologyPage() {
                 <div>role: {n.role}</div>
                 <div>site: {n.siteId}</div>
                 <div className="tag-row">{reasons.map((reason) => <IssueTag key={reason} value={reason} />)}</div>
-                <Link to={`/device-360/${n.deviceId}`}>Device 360</Link>
-                {' | '}
-                <Link to={`/inventory?job=${d?.sourceDiscoveryJobId ?? ''}`}>Inventory</Link>
-                {' | '}
-                <Link to={`/troubleshooting?device=${n.deviceId}&site=${n.siteId}&issue=${reasons[0] ?? 'unassigned'}`}>Troubleshooting</Link>
+                <DrillDownLink to={`/device-360/${n.deviceId}`} label="Device 360" reason="Reason: inspect node-local state details" />
+                <DrillDownLink to={`/inventory?job=${d?.sourceDiscoveryJobId ?? ''}`} label="Inventory" reason="Reason: validate assignment and role data" />
+                <DrillDownLink to={`/troubleshooting?device=${n.deviceId}&site=${n.siteId}&issue=${reasons[0] ?? 'unassigned'}`} label="Troubleshooting" reason="Reason: isolate warning-node root cause" />
               </div>
             );
           })}
@@ -108,11 +112,9 @@ export function TopologyPage() {
             <li key={node.id}>
               {node.id} ({node.role}) {reasons.map((r) => <IssueTag key={r} value={r} />)}
               {' - '}
-              <Link to={`/inventory?job=${device?.sourceDiscoveryJobId ?? ''}`}>Inventory</Link>
-              {' / '}
-              <Link to={`/device-360/${node.deviceId}`}>Device 360</Link>
-              {' / '}
-              <Link to={`/troubleshooting?device=${node.deviceId}&site=${node.siteId}&issue=${reasons[0] ?? 'unassigned'}`}>Troubleshooting</Link>
+              <DrillDownLink to={`/inventory?job=${device?.sourceDiscoveryJobId ?? ''}`} label="Inventory" reason="Reason: verify source discovery context" />
+              <DrillDownLink to={`/device-360/${node.deviceId}`} label="Device 360" reason="Reason: confirm current device symptoms" />
+              <DrillDownLink to={`/troubleshooting?device=${node.deviceId}&site=${node.siteId}&issue=${reasons[0] ?? 'unassigned'}`} label="Troubleshooting" reason="Reason: continue guided root-cause isolation" />
             </li>
           ))}
         </ul>

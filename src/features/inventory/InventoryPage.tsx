@@ -10,6 +10,8 @@ import { FilterStrip } from '../../components/FilterStrip';
 import { TableSection } from '../../components/TableSection';
 import { DetailRailSection } from '../../components/DetailRailSection';
 import { ActionBar } from '../../components/ActionBar';
+import { ContextHeader } from '../../components/ContextHeader';
+import { DrillDownLink } from '../../components/DrillDownLink';
 
 const roleOptions: DeviceRole[] = ['core', 'distribution', 'access', 'wireless-controller', 'unknown'];
 const policyOptions: PreferredManagementIpPolicy[] = ['loopback', 'interface-vlan', 'system'];
@@ -18,6 +20,10 @@ export function InventoryPage() {
   const { data, setSelectedDeviceId, selectedDeviceId, normalizeDevice } = useAppState();
   const [params] = useSearchParams();
   const jobFocus = params.get('job') ?? '';
+  const siteFocus = params.get('site') ?? '';
+  const deviceFocus = params.get('device') ?? '';
+  const issueFocus = params.get('issue') ?? '';
+  const timeFocus = params.get('time') ?? '';
   const [assignment, setAssignment] = useState('all');
   const [family, setFamily] = useState('all');
 
@@ -35,6 +41,7 @@ export function InventoryPage() {
   return (
     <div>
       <PageHeader title="Inventory Operations" subtitle="Filter, focus, and normalize managed devices." />
+      <ContextHeader site={siteFocus || 'all'} device={deviceFocus} issue={issueFocus || jobFocus} time={timeFocus || 'current'} />
 
       <FilterStrip>
         <select><option>Location: Global</option><option>HQ</option><option>Branch</option></select>
@@ -89,9 +96,9 @@ export function InventoryPage() {
 
             <DetailRailSection title="Next Actions">
               <div className="quick-links">
-                <Link to={`/provision?site=${selected.siteId}&device=${selected.id}`}>Provision</Link>
-                <Link to={`/software/images?site=${selected.siteId}&device=${selected.id}`}>Software</Link>
-                <Link to={`/compliance?site=${selected.siteId}&device=${selected.id}`}>Compliance</Link>
+                <DrillDownLink to={`/provision?site=${selected.siteId}&device=${selected.id}`} label="Provision" reason="Reason: check intent deployment status" />
+                <DrillDownLink to={`/software/images?site=${selected.siteId}&device=${selected.id}`} label="Software" reason="Reason: verify image lifecycle state" />
+                <DrillDownLink to={`/compliance?site=${selected.siteId}&device=${selected.id}`} label="Compliance" reason="Reason: validate policy alignment" />
               </div>
             </DetailRailSection>
           </div>
