@@ -3,18 +3,20 @@ export function DataTable({
   rows,
   selectedRow,
   onRowSelect,
-  actionColumnIndexes
+  actionColumnIndexes,
+  className
 }: {
   columns: string[];
   rows: React.ReactNode[][];
   selectedRow?: number;
   onRowSelect?: (idx: number) => void;
   actionColumnIndexes?: number[];
+  className?: string;
 }) {
   const actionIdxSet = new Set(actionColumnIndexes ?? []);
 
   return (
-    <table className="data-table">
+    <table className={`data-table ${className ?? ''}`.trim()}>
       <thead>
         <tr>{columns.map((c, idx) => <th key={c} className={actionIdxSet.has(idx) ? 'action-col' : ''}>{c}</th>)}</tr>
       </thead>

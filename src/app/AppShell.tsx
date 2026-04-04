@@ -88,7 +88,7 @@ export function AppShell() {
         <section className="content"><Outlet /></section>
       </main>
 
-      <Drawer title="Global Context Rail" open={true}>
+      <Drawer title="Global Context (Pinned)" open={true} className="global-context-rail">
         {selected ? (
           <div className="right-pane-block">
             <p><strong>{selected.name}</strong></p>
@@ -105,7 +105,7 @@ export function AppShell() {
         ) : (
           <div className="right-pane-block">
             <p><strong>No global device selected.</strong></p>
-            <p>Page-local rails show selected row details for current workflow.</p>
+            <p>Use page-local rail for active drill-down. Pin here only when needed.</p>
             <div className="quick-links compact-links">
               <Link to="/inventory">Select from Inventory</Link>
               <Link to="/assurance">Select from Assurance</Link>
