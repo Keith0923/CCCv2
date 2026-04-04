@@ -110,6 +110,7 @@ body {
 .breadcrumbs a { color: var(--accent); text-decoration: none; }
 .page-meta-actions { display: flex; align-items: center; gap: 8px; }
 .page-meta-actions a { color: var(--accent); text-decoration: none; font-size: 11px; }
+.page-shortcuts-label { font-size: 10px; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 2px; }
 
 .content { padding: 12px; }
 

@@ -32,6 +32,8 @@ export function AppShell() {
   const selected = data.devices.find((d) => d.id === selectedDeviceId);
   const location = useLocation();
   const breadcrumbs = location.pathname.split('/').filter(Boolean);
+  const isPathTraceShortcutContext = ['device-360', 'client-360', 'troubleshooting', 'assurance/issues'].some((k) => location.pathname.includes(k));
+  const deviceFromPath = location.pathname.startsWith('/device-360/') ? location.pathname.split('/')[2] : undefined;
 
   return (
     <div className="shell">
@@ -74,9 +76,12 @@ export function AppShell() {
             {breadcrumbs.map((crumb, idx) => <span key={`${crumb}-${idx}`}>/ {crumb}</span>)}
           </div>
           <div className="page-meta-actions">
+            <span className="page-shortcuts-label">Context shortcuts</span>
             <Link to="/assurance">Assurance</Link>
             <Link to="/topology">Topology</Link>
-            <Link to="/assurance/path-trace">Path Trace</Link>
+            {isPathTraceShortcutContext && (
+              <Link to={deviceFromPath ? `/assurance/path-trace?device=${deviceFromPath}` : '/assurance/path-trace'}>Path Trace (Drill-down)</Link>
+            )}
           </div>
         </section>
 
