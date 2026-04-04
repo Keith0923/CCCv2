@@ -522,3 +522,19 @@ body {
   font-size: 10px;
 }
 .rail-empty-inline { margin: 0; color: var(--text-soft); font-size: 11px; }
+
+.context-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  background: var(--surface-muted);
+  font-size: 12px;
+}
+.context-header strong {
+  color: var(--text-soft);
+  font-weight: 600;
+}
