@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
 import { useAppState } from '../../app/state';
 import { selectAssuranceSummary } from './selectors';
 import { selectAssuranceIssues, selectAssuranceTrend } from './clientSelectors';
@@ -14,14 +15,18 @@ import { DataTable } from '../../components/DataTable';
 import { DetailRailSection } from '../../components/DetailRailSection';
 
 export function AssurancePage() {
-  const { data } = useAppState();
+  const { data, setSelectedDeviceId } = useAppState();
   const [params] = useSearchParams();
   const siteFocus = params.get('site') ?? '';
   const trendRange = (params.get('range') as '1h' | '24h' | '7d' | null) ?? '24h';
   const summary = selectAssuranceSummary(data, siteFocus || undefined);
   const trend = selectAssuranceTrend(trendRange);
   const issues = selectAssuranceIssues(siteFocus || undefined);
-  const selectedIssue = issues[0];
+  const [selectedIssueIndex, setSelectedIssueIndex] = useState(0);
+  const [selectedSiteIndex, setSelectedSiteIndex] = useState(0);
+
+  const selectedIssue = issues[selectedIssueIndex];
+  const selectedSite = summary.siteSummary[selectedSiteIndex];
 
   return (
     <div>
@@ -59,13 +64,19 @@ export function AssurancePage() {
             <DataTable
               columns={['Site', 'Health', 'Impacted', 'Actions']}
               rows={summary.siteSummary.map((site) => [site.name, <StatusChip key={site.siteId} value={site.health} />, site.impacted, <Link to={`/assurance?site=${site.siteId}`}>Focus</Link>])}
+              selectedRow={selectedSiteIndex}
+              onRowSelect={setSelectedSiteIndex}
+              actionColumnIndexes={[3]}
             />
           </TableSection>
 
           <TableSection title="Issues / Events" metadata={`rows ${issues.length}`}>
             <DataTable
-              columns={['Title', 'Site', 'Status', 'Actions']}
-              rows={issues.map((i) => [i.title, i.siteId, <StatusChip key={i.id} value={i.status} />, <Link to={`/assurance/issues?site=${i.siteId}&issue=${i.id}`}>Open</Link>])}
+              columns={['Title', 'Site', 'Status', 'Category', 'Actions']}
+              rows={issues.map((i) => [i.title, i.siteId, <StatusChip key={i.id} value={i.status} />, i.category, <Link to={`/assurance/issues?site=${i.siteId}&issue=${i.id}`}>Open</Link>])}
+              selectedRow={selectedIssueIndex}
+              onRowSelect={setSelectedIssueIndex}
+              actionColumnIndexes={[4]}
             />
           </TableSection>
         </div>
@@ -74,11 +85,18 @@ export function AssurancePage() {
           <DetailRailSection title="Selected Issue Detail">
             {selectedIssue ? <><p>{selectedIssue.title}</p><p>Category: {selectedIssue.category}</p><p>Status: <StatusChip value={selectedIssue.status} /></p></> : <p>No issue selected</p>}
           </DetailRailSection>
+
+          <DetailRailSection title="Selected Site Context">
+            {selectedSite ? <><p>{selectedSite.name}</p><p>Health: <StatusChip value={selectedSite.health} /></p><p>Impacted: {selectedSite.impacted}</p></> : <p>No site selected</p>}
+          </DetailRailSection>
+
           <DetailRailSection title="Drill-down Actions">
             <div className="quick-links">
-              <Link to={siteFocus ? `/assurance/clients?site=${siteFocus}` : '/assurance/clients'}>Client Health</Link>
-              <Link to={siteFocus ? `/assurance/path-trace?site=${siteFocus}` : '/assurance/path-trace'}>Path Trace</Link>
-              <Link to={siteFocus ? `/troubleshooting?site=${siteFocus}` : '/troubleshooting'}>Troubleshooting</Link>
+              {selectedIssue?.deviceId && <button onClick={() => setSelectedDeviceId(selectedIssue.deviceId)}>Set Global Device</button>}
+              {selectedIssue?.deviceId && <Link to={`/device-360/${selectedIssue.deviceId}`}>Device 360</Link>}
+              {selectedIssue?.clientId && <Link to={`/client-360/${selectedIssue.clientId}?site=${selectedIssue.siteId}`}>Client 360</Link>}
+              <Link to={selectedIssue ? `/troubleshooting?site=${selectedIssue.siteId}&device=${selectedIssue.deviceId ?? ''}&issue=${selectedIssue.category}` : '/troubleshooting'}>Troubleshooting</Link>
+              <Link to={selectedIssue ? `/assurance/path-trace?site=${selectedIssue.siteId}&issue=${selectedIssue.id}` : '/assurance/path-trace'}>Path Trace</Link>
             </div>
           </DetailRailSection>
         </div>

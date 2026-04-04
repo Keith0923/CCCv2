@@ -1,12 +1,33 @@
-export function DataTable({ columns, rows }: { columns: string[]; rows: React.ReactNode[][] }) {
+export function DataTable({
+  columns,
+  rows,
+  selectedRow,
+  onRowSelect,
+  actionColumnIndexes
+}: {
+  columns: string[];
+  rows: React.ReactNode[][];
+  selectedRow?: number;
+  onRowSelect?: (idx: number) => void;
+  actionColumnIndexes?: number[];
+}) {
+  const actionIdxSet = new Set(actionColumnIndexes ?? []);
+
   return (
     <table className="data-table">
       <thead>
-        <tr>{columns.map((c) => <th key={c}>{c}</th>)}</tr>
+        <tr>{columns.map((c, idx) => <th key={c} className={actionIdxSet.has(idx) ? 'action-col' : ''}>{c}</th>)}</tr>
       </thead>
       <tbody>
         {rows.map((row, i) => (
-          <tr key={i}>{row.map((cell, j) => <td key={j}>{cell}</td>)}</tr>
+          <tr
+            key={i}
+            className={selectedRow === i ? 'selected-row' : ''}
+            onClick={() => onRowSelect?.(i)}
+            role={onRowSelect ? 'button' : undefined}
+          >
+            {row.map((cell, j) => <td key={j} className={actionIdxSet.has(j) ? 'action-col' : ''}>{cell}</td>)}
+          </tr>
         ))}
       </tbody>
     </table>

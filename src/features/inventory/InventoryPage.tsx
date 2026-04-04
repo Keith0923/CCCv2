@@ -28,7 +28,8 @@ export function InventoryPage() {
     return [...familyFiltered].sort((a, b) => (a.sourceDiscoveryJobId === jobFocus ? 0 : 1) - (b.sourceDiscoveryJobId === jobFocus ? 0 : 1));
   }, [data.devices, assignment, family, jobFocus]);
 
-  const selected = data.devices.find((d) => d.id === selectedDeviceId) ?? devices[0];
+  const selectedIndex = Math.max(devices.findIndex((d) => d.id === selectedDeviceId), 0);
+  const selected = devices[selectedIndex] ?? devices[0];
   const effectiveRole = selected ? (selected.roleOverride ?? selected.roleDetected) : 'unknown';
 
   return (
@@ -38,11 +39,7 @@ export function InventoryPage() {
       <FilterStrip>
         <select><option>Location: Global</option><option>HQ</option><option>Branch</option></select>
         <select value={family} onChange={(e) => setFamily(e.target.value)}>
-          <option value="all">Family: All</option>
-          <option value="core">Core</option>
-          <option value="distribution">Distribution</option>
-          <option value="access">Access</option>
-          <option value="wireless-controller">Wireless</option>
+          <option value="all">Family: All</option><option value="core">Core</option><option value="distribution">Distribution</option><option value="access">Access</option><option value="wireless-controller">Wireless</option>
         </select>
         <select value={assignment} onChange={(e) => setAssignment(e.target.value)}>
           <option value="all">Focus: All</option><option value="assigned">Assigned</option><option value="unassigned">Unassigned</option><option value="pending">Pending</option>
@@ -57,7 +54,7 @@ export function InventoryPage() {
 
       <div className="investigation-layout">
         <div>
-          <TableSection title="Inventory Table" metadata={`rows ${devices.length} / focus ${assignment} / family ${family}`}>
+          <TableSection title="Inventory Table" metadata={`rows ${devices.length} / focus ${assignment} / family ${family} / job ${jobFocus || 'all'}`}>
             <DataTable
               columns={['Device', 'Site', 'Health', 'Role', 'Reachability', 'Issue Hint', 'Actions']}
               rows={devices.map((d) => [
@@ -69,6 +66,9 @@ export function InventoryPage() {
                 <>{d.assignmentState !== 'assigned' && <IssueTag value="unassigned" />} {(d.roleOverride ?? d.roleDetected) === 'unknown' && <IssueTag value="mis-role" />}</>,
                 <><button onClick={() => setSelectedDeviceId(d.id)}>Select</button> <Link to={`/device-360/${d.id}`}>Device 360</Link></>
               ])}
+              selectedRow={selectedIndex}
+              onRowSelect={(idx) => setSelectedDeviceId(devices[idx]?.id)}
+              actionColumnIndexes={[6]}
             />
           </TableSection>
         </div>
@@ -76,10 +76,7 @@ export function InventoryPage() {
         {selected && (
           <div className="right-ops-rail">
             <DetailRailSection title="Selected Device Summary">
-              <p>{selected.name}</p>
-              <p>Site: {selected.siteId}</p>
-              <p>Health: <StatusChip value={selected.health} /></p>
-              <p>Role: {effectiveRole}</p>
+              <p>{selected.name}</p><p>Site: {selected.siteId}</p><p>Health: <StatusChip value={selected.health} /></p><p>Role: {effectiveRole}</p>
             </DetailRailSection>
 
             <DetailRailSection title="Normalization Actions">
@@ -87,6 +84,14 @@ export function InventoryPage() {
                 <label>Site<select value={selected.siteId} onChange={(e) => normalizeDevice({ deviceId: selected.id, siteId: e.target.value })}>{data.sites.map((s) => <option key={s.id} value={s.id}>{s.id}</option>)}</select></label>
                 <label>Role<select value={selected.roleOverride ?? selected.roleDetected} onChange={(e) => normalizeDevice({ deviceId: selected.id, roleOverride: e.target.value as DeviceRole })}>{roleOptions.map((r) => <option key={r} value={r}>{r}</option>)}</select></label>
                 <label>Policy<select value={selected.preferredManagementIpPolicy} onChange={(e) => normalizeDevice({ deviceId: selected.id, preferredManagementIpPolicy: e.target.value as PreferredManagementIpPolicy })}>{policyOptions.map((p) => <option key={p} value={p}>{p}</option>)}</select></label>
+              </div>
+            </DetailRailSection>
+
+            <DetailRailSection title="Next Actions">
+              <div className="quick-links">
+                <Link to={`/provision?site=${selected.siteId}&device=${selected.id}`}>Provision</Link>
+                <Link to={`/software/images?site=${selected.siteId}&device=${selected.id}`}>Software</Link>
+                <Link to={`/compliance?site=${selected.siteId}&device=${selected.id}`}>Compliance</Link>
               </div>
             </DetailRailSection>
           </div>

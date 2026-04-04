@@ -3,37 +3,28 @@ import { Drawer } from '../components/Drawer';
 import { useAppState } from './state';
 
 const navGroups = [
-  {
-    title: 'Operate',
-    links: [
-      { to: '/', label: 'Overview', icon: '◻' },
-      { to: '/discovery', label: 'Discovery', icon: '◎' },
-      { to: '/inventory', label: 'Inventory', icon: '▤' },
-      { to: '/topology', label: 'Topology', icon: '◉' },
-      { to: '/assurance', label: 'Assurance', icon: '▲' },
-      { to: '/troubleshooting', label: 'Troubleshooting', icon: '✦' }
-    ]
-  },
-  {
-    title: 'Deliver',
-    links: [
-      { to: '/provision', label: 'Provision', icon: '↺' },
-      { to: '/software/images', label: 'Software', icon: '⬒' },
-      { to: '/compliance', label: 'Compliance', icon: '✓' },
-      { to: '/activities', label: 'Activities', icon: '☰' },
-      { to: '/jobs', label: 'Jobs', icon: '⌛' }
-    ]
-  },
-  {
-    title: 'Integrate',
-    links: [
-      { to: '/platform', label: 'Platform', icon: '⇄' },
-      { to: '/platform/itsm', label: 'ITSM', icon: '⛓' },
-      { to: '/wireless/maps', label: 'Wireless', icon: '◌' },
-      { to: '/sda/fabric', label: 'SDA', icon: '▦' },
-      { to: '/settings', label: 'Settings', icon: '⚙' }
-    ]
-  }
+  { title: 'Operate', links: [
+    { to: '/', label: 'Overview', icon: '◻' },
+    { to: '/discovery', label: 'Discovery', icon: '◎' },
+    { to: '/inventory', label: 'Inventory', icon: '▤' },
+    { to: '/topology', label: 'Topology', icon: '◉' },
+    { to: '/assurance', label: 'Assurance', icon: '▲' },
+    { to: '/troubleshooting', label: 'Troubleshooting', icon: '✦' }
+  ] },
+  { title: 'Deliver', links: [
+    { to: '/provision', label: 'Provision', icon: '↺' },
+    { to: '/software/images', label: 'Software', icon: '⬒' },
+    { to: '/compliance', label: 'Compliance', icon: '✓' },
+    { to: '/activities', label: 'Activities', icon: '☰' },
+    { to: '/jobs', label: 'Jobs', icon: '⌛' }
+  ] },
+  { title: 'Integrate', links: [
+    { to: '/platform', label: 'Platform', icon: '⇄' },
+    { to: '/platform/itsm', label: 'ITSM', icon: '⛓' },
+    { to: '/wireless/maps', label: 'Wireless', icon: '◌' },
+    { to: '/sda/fabric', label: 'SDA', icon: '▦' },
+    { to: '/settings', label: 'Settings', icon: '⚙' }
+  ] }
 ];
 
 export function AppShell() {
@@ -92,8 +83,8 @@ export function AppShell() {
         <section className="content"><Outlet /></section>
       </main>
 
-      <Drawer title="Details Rail" open={Boolean(selected)}>
-        {selected && (
+      <Drawer title="Global Context Rail" open={true}>
+        {selected ? (
           <div className="right-pane-block">
             <p><strong>{selected.name}</strong></p>
             <p>IP: {selected.managementIp}</p>
@@ -104,7 +95,16 @@ export function AppShell() {
               <Link to={`/device-360/${selected.id}`}>Device 360</Link>
               <Link to={`/assurance/path-trace?device=${selected.id}&site=${selected.siteId}`}>Path Trace</Link>
             </div>
-            <button onClick={() => setSelectedDeviceId(undefined)}>Close</button>
+            <button onClick={() => setSelectedDeviceId(undefined)}>Clear Global Selection</button>
+          </div>
+        ) : (
+          <div className="right-pane-block">
+            <p><strong>No global device selected.</strong></p>
+            <p>Page-local rails show selected row details for current workflow.</p>
+            <div className="quick-links compact-links">
+              <Link to="/inventory">Select from Inventory</Link>
+              <Link to="/assurance">Select from Assurance</Link>
+            </div>
           </div>
         )}
       </Drawer>

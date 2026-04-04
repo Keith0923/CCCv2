@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppState } from '../../app/state';
 import { selectAssuranceSummary } from '../assurance/selectors';
@@ -9,12 +9,28 @@ import { FilterStrip } from '../../components/FilterStrip';
 import { SummaryStrip } from '../../components/SummaryStrip';
 import { DashletCard } from '../../components/DashletCard';
 import { DetailRailSection } from '../../components/DetailRailSection';
+import { DataTable } from '../../components/DataTable';
 
 export function DashboardPage() {
-  const { data } = useAppState();
+  const { data, setSelectedDeviceId } = useAppState();
   const assurance = selectAssuranceSummary(data);
   const issues = selectAssuranceIssues();
-  const selectedIssue = issues[0];
+  const [selectedIssueIndex, setSelectedIssueIndex] = useState(0);
+  const [selectedEntityIndex, setSelectedEntityIndex] = useState(0);
+
+  const selectedIssue = issues[selectedIssueIndex];
+  const entities = assurance.impactedDevices.slice(0, 6);
+  const selectedEntity = entities[selectedEntityIndex];
+
+  const issueRows = useMemo(
+    () => issues.slice(0, 6).map((i) => [i.title, i.siteId, <StatusChip key={i.id} value={i.status} />, i.category]),
+    [issues]
+  );
+
+  const entityRows = useMemo(
+    () => entities.map((row) => [row.device.name, row.device.siteId, <StatusChip key={row.device.id} value={row.device.health} />, row.categories.join(', ')]),
+    [entities]
+  );
 
   return (
     <div>
@@ -37,58 +53,49 @@ export function DashboardPage() {
       <div className="investigation-layout">
         <div className="hub-grid">
           <DashletCard title="Recent Discovery">
-            <DataList rows={data.discoveryJobs.slice(0, 4).map((j) => ({ title: j.name, meta: `${j.discoveryType} / ${j.credentialProfileId}`, status: j.status, action: <Link to={`/discovery?job=${j.id}`}>Open</Link> }))} />
+            <DataTable
+              columns={['Job', 'Type', 'Status', 'Action']}
+              rows={data.discoveryJobs.slice(0, 4).map((j) => [j.name, j.discoveryType, <StatusChip key={j.id} value={j.status} />, <Link to={`/discovery?job=${j.id}`}>Open</Link>])}
+              actionColumnIndexes={[3]}
+            />
           </DashletCard>
 
           <DashletCard title="Operational Focus">
-            <DataList rows={assurance.siteSummary.slice(0, 4).map((site) => ({ title: site.name, meta: `impacted ${site.impacted}/${site.totalDevices}`, status: site.health, action: <Link to={`/assurance?site=${site.siteId}`}>Inspect</Link> }))} />
+            <DataTable
+              columns={['Site', 'Impacted', 'Health', 'Action']}
+              rows={assurance.siteSummary.slice(0, 4).map((site) => [site.name, `${site.impacted}/${site.totalDevices}`, <StatusChip key={site.siteId} value={site.health} />, <Link to={`/assurance?site=${site.siteId}`}>Inspect</Link>])}
+              actionColumnIndexes={[3]}
+            />
           </DashletCard>
 
           <DashletCard title="Task & Event Watch">
-            <DataList rows={issues.slice(0, 4).map((i) => ({ title: i.title, meta: `${i.siteId} / ${i.category}`, status: i.status, action: <Link to={`/assurance/issues?site=${i.siteId}&issue=${i.id}`}>Drill-down</Link> }))} />
+            <DataTable columns={['Issue', 'Site', 'Status', 'Category']} rows={issueRows} selectedRow={selectedIssueIndex} onRowSelect={setSelectedIssueIndex} />
           </DashletCard>
 
           <DashletCard title="Impacted Entities">
-            <DataList rows={assurance.impactedDevices.slice(0, 4).map((row) => ({ title: row.device.name, meta: `${row.device.siteId} / ${row.categories.join(', ')}`, status: row.device.health, action: <Link to={`/device-360/${row.device.id}`}>Investigate</Link> }))} />
+            <DataTable columns={['Device', 'Site', 'Health', 'Issues']} rows={entityRows} selectedRow={selectedEntityIndex} onRowSelect={setSelectedEntityIndex} />
           </DashletCard>
         </div>
 
         <div className="right-ops-rail">
-          <DetailRailSection title="Selected Issue">
-            {selectedIssue ? (
-              <>
-                <p>{selectedIssue.title}</p>
-                <p>Site: {selectedIssue.siteId}</p>
-                <p>Status: <StatusChip value={selectedIssue.status} /></p>
-              </>
-            ) : <p>No open issue</p>}
+          <DetailRailSection title="Selected Task / Event">
+            {selectedIssue ? <><p>{selectedIssue.title}</p><p>Site: {selectedIssue.siteId}</p><p>Status: <StatusChip value={selectedIssue.status} /></p></> : <p>No issue</p>}
+          </DetailRailSection>
+
+          <DetailRailSection title="Selected Impacted Entity">
+            {selectedEntity ? <><p>{selectedEntity.device.name}</p><p>Site: {selectedEntity.device.siteId}</p><p>Health: <StatusChip value={selectedEntity.device.health} /></p></> : <p>No entity</p>}
           </DetailRailSection>
 
           <DetailRailSection title="Quick Actions">
             <div className="quick-links">
-              <Link to="/assurance">Assurance</Link>
-              <Link to="/inventory">Inventory</Link>
-              <Link to="/topology">Topology</Link>
+              {selectedEntity && <button onClick={() => setSelectedDeviceId(selectedEntity.device.id)}>Set Global Device</button>}
+              {selectedEntity && <Link to={`/device-360/${selectedEntity.device.id}`}>Device 360</Link>}
+              {selectedIssue && <Link to={`/assurance/issues?site=${selectedIssue.siteId}&issue=${selectedIssue.id}`}>Open Issue</Link>}
               <Link to="/assurance/path-trace">Path Trace</Link>
             </div>
           </DetailRailSection>
         </div>
       </div>
     </div>
-  );
-}
-
-function DataList({ rows }: { rows: Array<{ title: string; meta: string; status: string; action: ReactNode }> }) {
-  return (
-    <table className="data-table compact-table">
-      <thead><tr><th>Item</th><th>Meta</th><th>Status</th><th>Action</th></tr></thead>
-      <tbody>
-        {rows.map((r) => (
-          <tr key={`${r.title}-${r.meta}`}>
-            <td>{r.title}</td><td>{r.meta}</td><td><StatusChip value={r.status} /></td><td>{r.action}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
   );
 }
