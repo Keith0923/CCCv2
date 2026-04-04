@@ -20,6 +20,11 @@ export function DashboardPage() {
   const entities = assurance.impactedDevices.slice(0, 6);
   const selectedEntity = entities[selectedEntityIndex];
 
+  const openIssues = issues.filter((i) => i.status !== 'resolved').length;
+  const runningDiscoveries = data.discoveryJobs.filter((j) => j.status === 'running').length;
+  const totalDevices = assurance.siteSummary.reduce((sum, site) => sum + site.totalDevices, 0);
+  const topSite = assurance.siteSummary[0];
+
   const issueRows = useMemo(
     () => issues.slice(0, 6).map((i) => [i.title, i.siteId, <StatusChip key={i.id} value={i.status} />, i.category]),
     [issues]
@@ -33,24 +38,51 @@ export function DashboardPage() {
     <div>
       <PageHeader title="Operations Hub" subtitle="Prioritized monitoring and drill-down command center." />
 
-      <section className="dashboard-control-bar">
-        <div className="control-group"><label>Time</label><select><option>24h</option><option>1h</option><option>7d</option></select></div>
-        <div className="control-group"><label>Site</label><select><option>All Sites</option></select></div>
-        <div className="control-group"><label>Domain</label><select><option>Campus</option><option>Wireless</option><option>SDA</option></select></div>
-        <button type="button">Refresh Snapshot</button>
-        <span className="control-context">Monitoring context: live snapshot / global scope</span>
+      <section className="dashboard-control-bar context-band">
+        <div className="context-band-head">
+          <strong>Monitoring Scope</strong>
+          <span>Live operations baseline for triage and drill-down</span>
+        </div>
+        <div className="context-band-meta">
+          <div className="context-pill"><label>Time Window</label><strong>Last 24 hours</strong></div>
+          <div className="context-pill"><label>Site Scope</label><strong>All Sites</strong></div>
+          <div className="context-pill"><label>Domain</label><strong>Campus</strong></div>
+          <div className="context-pill"><label>Data Freshness</label><strong>Snapshot / Manual Refresh</strong></div>
+        </div>
+        <div className="context-band-controls">
+          <div className="control-group"><label>Time</label><select><option>24h</option><option>1h</option><option>7d</option></select></div>
+          <div className="control-group"><label>Site</label><select><option>All Sites</option></select></div>
+          <div className="control-group"><label>Domain</label><select><option>Campus</option><option>Wireless</option><option>SDA</option></select></div>
+          <button type="button">Refresh Snapshot</button>
+        </div>
       </section>
 
       <section className="dashboard-kpi-grid">
-        <article className="kpi-card kpi-primary"><small>Open Issues</small><strong>{issues.filter((i) => i.status !== 'resolved').length}</strong><p>Investigate top active alerts first.</p></article>
-        <article className="kpi-card"><small>Degraded Sites</small><strong>{assurance.healthTotals.degradedSites}</strong><p>Sites requiring immediate review.</p></article>
-        <article className="kpi-card"><small>Impacted Devices</small><strong>{assurance.healthTotals.impactedDevices}</strong><p>Devices with health or policy risk.</p></article>
-        <article className="kpi-card"><small>Running Discovery</small><strong>{data.discoveryJobs.filter((j) => j.status === 'running').length}</strong><p>Current discovery workloads.</p></article>
+        <article className="kpi-card kpi-primary kpi-open-issues"><small>Open Issues</small><strong>{openIssues}</strong><p>Highest-priority active alerts across current scope.</p></article>
+        <article className="kpi-card kpi-secondary"><small>Degraded Sites</small><strong>{assurance.healthTotals.degradedSites}</strong><p>Sites needing attention before broader impact.</p></article>
+        <article className="kpi-card kpi-secondary"><small>Impacted Devices</small><strong>{assurance.healthTotals.impactedDevices}</strong><p>Devices showing health or policy risk signals.</p></article>
+        <article className="kpi-card kpi-tertiary"><small>Running Discovery</small><strong>{runningDiscoveries}</strong><p>Background workload; monitor but lower triage priority.</p></article>
       </section>
 
       <div className="dashboard-layout">
         <div className="dashboard-main-grid">
           <DashletCard title="Operational Focus (Primary)">
+            <section className="ops-focus-hero">
+              <div>
+                <p className="ops-focus-label">Top Focus</p>
+                <h3>{topSite ? topSite.name : 'No active site focus'}</h3>
+                <p className="ops-focus-context">{topSite ? `${topSite.impacted} impacted of ${topSite.totalDevices} devices in scope.` : 'No impacted site currently surfaced.'}</p>
+              </div>
+              <div className="ops-focus-meta">
+                <div><small>Open Issues</small><strong>{openIssues}</strong></div>
+                <div><small>Impacted Devices</small><strong>{assurance.healthTotals.impactedDevices}</strong></div>
+                <div><small>Total Devices</small><strong>{totalDevices}</strong></div>
+              </div>
+              <div className="ops-focus-actions">
+                {topSite && <Link to={`/assurance?site=${topSite.siteId}`}>Inspect Priority Site</Link>}
+                <Link to="/assurance">Open Assurance Workspace</Link>
+              </div>
+            </section>
             <DataTable
               columns={['Site', 'Impacted', 'Health', 'Action']}
               rows={assurance.siteSummary.slice(0, 5).map((site) => [site.name, `${site.impacted}/${site.totalDevices}`, <StatusChip key={site.siteId} value={site.health} />, <Link to={`/assurance?site=${site.siteId}`}>Inspect</Link>])}
@@ -76,20 +108,22 @@ export function DashboardPage() {
         </div>
 
         <aside className="dashboard-rail-bridge right-ops-rail">
-          <DetailRailSection title="Selected Task / Event">
-            {selectedIssue ? <><p>{selectedIssue.title}</p><p>Site: {selectedIssue.siteId}</p><p>Status: <StatusChip value={selectedIssue.status} /></p></> : <p>No issue selected</p>}
+          <div className="rail-flow-caption">Investigation flow: center selection → right rail detail</div>
+
+          <DetailRailSection title={`Selected Task / Event${selectedIssue ? ` · ${selectedIssue.siteId}` : ''}`}>
+            {selectedIssue ? <><p className="rail-selection-hint">Source: Task & Event Watch (selected row)</p><p>{selectedIssue.title}</p><p>Site: {selectedIssue.siteId}</p><p>Status: <StatusChip value={selectedIssue.status} /></p></> : <p>No issue selected</p>}
           </DetailRailSection>
 
-          <DetailRailSection title="Selected Impacted Entity">
-            {selectedEntity ? <><p>{selectedEntity.device.name}</p><p>Site: {selectedEntity.device.siteId}</p><p>Health: <StatusChip value={selectedEntity.device.health} /></p></> : <p>No entity selected</p>}
+          <DetailRailSection title={`Selected Impacted Entity${selectedEntity ? ` · ${selectedEntity.device.siteId}` : ''}`}>
+            {selectedEntity ? <><p className="rail-selection-hint">Source: Impacted Entities (selected row)</p><p>{selectedEntity.device.name}</p><p>Site: {selectedEntity.device.siteId}</p><p>Health: <StatusChip value={selectedEntity.device.health} /></p></> : <p>No entity selected</p>}
           </DetailRailSection>
 
-          <DetailRailSection title="Next Actions">
+          <DetailRailSection title="Next Actions (Drill-down)">
             <div className="quick-links">
               {selectedEntity && <button onClick={() => setSelectedDeviceId(selectedEntity.device.id)}>Pin Global Device</button>}
               {selectedEntity && <Link to={`/device-360/${selectedEntity.device.id}`}>Open Device 360</Link>}
               {selectedIssue && <Link to={`/assurance/issues?site=${selectedIssue.siteId}&issue=${selectedIssue.id}`}>Open Issue Detail</Link>}
-              <Link to="/assurance/path-trace">Run Path Trace</Link>
+              {selectedEntity && <Link to={`/assurance/path-trace?device=${selectedEntity.device.id}&site=${selectedEntity.device.siteId}`}>Run Path Trace</Link>}
             </div>
           </DetailRailSection>
         </aside>
