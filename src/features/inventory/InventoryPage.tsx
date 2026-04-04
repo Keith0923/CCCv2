@@ -10,6 +10,7 @@ import { FilterStrip } from '../../components/FilterStrip';
 import { TableSection } from '../../components/TableSection';
 import { DetailRailSection } from '../../components/DetailRailSection';
 import { ActionBar } from '../../components/ActionBar';
+import { ContextHeader } from '../../components/ContextHeader';
 
 const roleOptions: DeviceRole[] = ['core', 'distribution', 'access', 'wireless-controller', 'unknown'];
 const policyOptions: PreferredManagementIpPolicy[] = ['loopback', 'interface-vlan', 'system'];
@@ -18,6 +19,10 @@ export function InventoryPage() {
   const { data, setSelectedDeviceId, selectedDeviceId, normalizeDevice } = useAppState();
   const [params] = useSearchParams();
   const jobFocus = params.get('job') ?? '';
+  const siteFocus = params.get('site') ?? '';
+  const deviceFocus = params.get('device') ?? '';
+  const issueFocus = params.get('issue') ?? '';
+  const timeFocus = params.get('time') ?? '';
   const [assignment, setAssignment] = useState('all');
   const [family, setFamily] = useState('all');
 
@@ -35,6 +40,7 @@ export function InventoryPage() {
   return (
     <div>
       <PageHeader title="Inventory Operations" subtitle="Filter, focus, and normalize managed devices." />
+      <ContextHeader site={siteFocus || 'all'} device={deviceFocus} issue={issueFocus || jobFocus} time={timeFocus || 'current'} />
 
       <FilterStrip>
         <select><option>Location: Global</option><option>HQ</option><option>Branch</option></select>

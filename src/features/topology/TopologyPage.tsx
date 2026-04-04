@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react';
 import { selectAssuranceSummary } from '../assurance/selectors';
 import { StatusBadge } from '../../components/StatusBadge';
 import { IssueTag } from '../../components/IssueTag';
+import { ContextHeader } from '../../components/ContextHeader';
 
 function warningReasons(device: { assignmentState: string; roleDetected: string; roleOverride?: string; reachability: string }) {
   const reasons: string[] = [];
@@ -20,6 +21,9 @@ export function TopologyPage() {
   const { data } = useAppState();
   const [params] = useSearchParams();
   const siteFocus = params.get('site') ?? '';
+  const deviceFocus = params.get('device') ?? '';
+  const issueFocus = params.get('issue') ?? '';
+  const timeFocus = params.get('time') ?? '';
   const [selectedLinkId, setSelectedLinkId] = useState<string>('');
   const assurance = selectAssuranceSummary(data, siteFocus || undefined);
 
@@ -48,6 +52,7 @@ export function TopologyPage() {
         <h1>Topology</h1>
         <p>Reflection view for site context and connectivity posture.</p>
       </div>
+      <ContextHeader site={siteFocus || 'all'} device={deviceFocus} issue={issueFocus} time={timeFocus || 'current'} />
 
       {siteFocus && (
         <Panel title="Site Focus">

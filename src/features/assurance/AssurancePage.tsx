@@ -13,11 +13,14 @@ import { SectionTabs } from '../../components/SectionTabs';
 import { TableSection } from '../../components/TableSection';
 import { DataTable } from '../../components/DataTable';
 import { DetailRailSection } from '../../components/DetailRailSection';
+import { ContextHeader } from '../../components/ContextHeader';
 
 export function AssurancePage() {
   const { data, setSelectedDeviceId } = useAppState();
   const [params] = useSearchParams();
   const siteFocus = params.get('site') ?? '';
+  const deviceFocus = params.get('device') ?? '';
+  const issueFocus = params.get('issue') ?? '';
   const trendRange = (params.get('range') as '1h' | '24h' | '7d' | null) ?? '24h';
   const summary = selectAssuranceSummary(data, siteFocus || undefined);
   const trend = selectAssuranceTrend(trendRange);
@@ -31,6 +34,7 @@ export function AssurancePage() {
   return (
     <div>
       <PageHeader title="Assurance Monitoring Hub" subtitle="Health and issue drill-down dashboard." />
+      <ContextHeader site={siteFocus || 'all'} device={deviceFocus} issue={issueFocus} time={trendRange} />
 
       <FilterStrip>
         <select><option>Time: {trendRange}</option><option>1h</option><option>24h</option><option>7d</option></select>
