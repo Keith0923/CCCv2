@@ -17,7 +17,6 @@ export function AssurancePage() {
 
   const summary = selectAssuranceSummary(data, siteFocus || undefined);
   const trend = selectAssuranceTrend(trendRange);
-
   const filteredImpacted = issueFocus
     ? summary.impactedDevices.filter((row) => row.categories.includes(issueFocus as any))
     : summary.impactedDevices;
@@ -25,8 +24,26 @@ export function AssurancePage() {
   return (
     <div>
       <div className="page-header">
-        <h1>Assurance Lite</h1>
-        <p>Operational posture summary and next investigation targets.</p>
+        <h1>Assurance Operations</h1>
+        <p>Health dashboard and drill-down entry for clients/devices/issues/events.</p>
+      </div>
+
+      <div className="filter-strip">
+        <select value={trendRange} onChange={() => undefined}>
+          <option>Time: {trendRange}</option>
+          <option>1h</option>
+          <option>24h</option>
+          <option>7d</option>
+        </select>
+        <select><option>Site: {siteFocus || 'all'}</option></select>
+        <select><option>Domain: enterprise</option><option>wireless</option><option>campus</option></select>
+      </div>
+
+      <div className="assurance-tabs">
+        <Link to={siteFocus ? `/assurance/clients?site=${siteFocus}` : '/assurance/clients'}>Clients</Link>
+        <Link to={siteFocus ? `/assurance/issues?site=${siteFocus}` : '/assurance/issues'}>Issues/Events</Link>
+        <Link to={siteFocus ? `/assurance/path-trace?site=${siteFocus}` : '/assurance/path-trace'}>Path Trace</Link>
+        <Link to={siteFocus ? `/assurance/capture?site=${siteFocus}` : '/assurance/capture'}>Capture</Link>
       </div>
 
       <SummaryStrip
@@ -38,13 +55,18 @@ export function AssurancePage() {
         ]}
       />
 
+      <div className="hub-grid">
+        <Panel title="Trend Dashlet">
+          <p>Range: {trendRange} / Avg health: {trend.avgHealth}</p>
+          <p>Worst site: {trend.worstSite} / floor: {trend.worstFloor} / client: {trend.worstClient}</p>
+        </Panel>
 
-      <Panel title="Monitoring Trend (Lite)">
-        <p>Range: {trendRange} (<Link to={siteFocus ? `/assurance?site=${siteFocus}&range=1h` : '/assurance?range=1h'}>1h</Link> | <Link to={siteFocus ? `/assurance?site=${siteFocus}&range=24h` : '/assurance?range=24h'}>24h</Link> | <Link to={siteFocus ? `/assurance?site=${siteFocus}&range=7d` : '/assurance?range=7d'}>7d</Link>)</p>
-        <p>Average health score: {trend.avgHealth}</p>
-        <p>Worst site: {trend.worstSite} / Worst floor: {trend.worstFloor} / Worst client: {trend.worstClient}</p>
-        <p><Link to={siteFocus ? `/assurance/clients?site=${siteFocus}&issue=${issueFocus}` : '/assurance/clients'}>Open Client Health</Link> | <Link to={siteFocus ? `/assurance/issues?site=${siteFocus}&issue=${issueFocus}` : '/assurance/issues'}>Open Issues/Events</Link> | <Link to={siteFocus ? `/assurance/path-trace?site=${siteFocus}` : '/assurance/path-trace'}>Open Path Trace</Link> | <Link to={siteFocus ? `/assurance/capture?site=${siteFocus}` : '/assurance/capture'}>Open Capture Lite</Link></p>
-      </Panel>
+        <Panel title="Issue Mix Dashlet">
+          <p><IssueTag value="unassigned" /> {summary.categorySummary.unassigned}</p>
+          <p><IssueTag value="mis-role" /> {summary.categorySummary['mis-role']}</p>
+          <p><IssueTag value="mgmt-ambiguity" /> {summary.categorySummary['mgmt-ambiguity']}</p>
+        </Panel>
+      </div>
 
       <Panel title="Site Health Summary">
         <DataTable
@@ -60,34 +82,12 @@ export function AssurancePage() {
               <Link to={`/topology?site=${site.siteId}`}>Topology</Link>
               {' | '}
               <Link to={`/troubleshooting?site=${site.siteId}`}>Troubleshooting</Link>
-              {' | '}
-              <Link to={`/software/images?site=${site.siteId}`}>Software</Link>
-              {' | '}
-              <Link to={`/activities?site=${site.siteId}`}>Activities</Link>
-              {' | '}
-              <Link to={`/compliance?site=${site.siteId}`}>Compliance</Link>
-              {' | '}
-              <Link to={`/platform?site=${site.siteId}`}>Platform</Link>
-              {' | '}
-              <Link to={`/wireless/maps?site=${site.siteId}`}>Wireless Maps</Link>
-              {' | '}
-              <Link to={`/assurance/advanced?site=${site.siteId}`}>Advanced Assurance</Link>
-              {' | '}
-              <Link to={`/sda/fabric?site=${site.siteId}`}>Fabric Overview</Link>
             </>
           ])}
         />
       </Panel>
 
-      <Panel title="Issue Category Summary">
-        <ul>
-          <li><IssueTag value="unassigned" /> {summary.categorySummary.unassigned} <Link to="/assurance?issue=unassigned">filter</Link> | <Link to="/troubleshooting?issue=unassigned">bridge</Link> | <Link to="/command-runner?issue=unassigned">command</Link></li>
-          <li><IssueTag value="mis-role" /> {summary.categorySummary['mis-role']} <Link to="/assurance?issue=mis-role">filter</Link> | <Link to="/troubleshooting?issue=mis-role">bridge</Link> | <Link to="/command-runner?issue=mis-role">command</Link></li>
-          <li><IssueTag value="mgmt-ambiguity" /> {summary.categorySummary['mgmt-ambiguity']} <Link to="/assurance?issue=mgmt-ambiguity">filter</Link> | <Link to="/troubleshooting?issue=mgmt-ambiguity">bridge</Link> | <Link to="/software/images?issue=mgmt-ambiguity">software</Link> | <Link to="/command-runner?issue=mgmt-ambiguity">command</Link></li>
-        </ul>
-      </Panel>
-
-      <Panel title="Impacted Devices List">
+      <Panel title="Impacted Entities">
         <DataTable
           columns={['Device', 'Site', 'Health', 'Issue Categories', 'Actions']}
           rows={filteredImpacted.map((row) => [
@@ -98,25 +98,7 @@ export function AssurancePage() {
             <>
               <Link to={`/device-360/${row.device.id}`}>Device 360</Link>
               {' | '}
-              <Link to={`/topology?site=${row.device.siteId}`}>Topology</Link>
-              {' | '}
-              <Link to={`/troubleshooting?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Troubleshooting</Link>
-              {' | '}
-              <Link to={`/software/images?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Software</Link>
-              {' | '}
-              <Link to={`/command-runner?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Command Runner</Link>
-              {' | '}
-              <Link to={`/compliance?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Compliance</Link>
-              {' | '}
-              <Link to={`/platform?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Platform</Link>
-              {' | '}
-              <Link to={`/wireless/security?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Wireless Security</Link>
-              {' | '}
-              <Link to={`/assurance/advanced?device=${row.device.id}&site=${row.device.siteId}&issue=${row.categories[0]}`}>Advanced Assurance</Link>
-              {' | '}
-              <Link to={`/assurance/clients?site=${row.device.siteId}&issue=${row.categories[0]}`}>Client Health</Link>
-              {' | '}
-              <Link to={`/assurance/issues?site=${row.device.siteId}&issue=${row.categories[0]}`}>Issues/Events</Link>
+              <Link to={`/assurance/issues?site=${row.device.siteId}&issue=${row.categories[0]}`}>Issues</Link>
             </>
           ])}
         />

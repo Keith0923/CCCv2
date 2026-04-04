@@ -6,6 +6,7 @@ import { EmptyState } from '../../components/EmptyState';
 import { StatusBadge } from '../../components/StatusBadge';
 import { IssueTag } from '../../components/IssueTag';
 import { selectComplianceDeviceDetail } from '../compliance/selectors';
+import { SummaryStrip } from '../../components/SummaryStrip';
 
 export function Device360Page() {
   const { id } = useParams();
@@ -21,74 +22,68 @@ export function Device360Page() {
   const effectiveRole = device.roleOverride ?? device.roleDetected;
   const imageState = deviceImageStates.find((x) => x.deviceId === device.id);
   const compliance = selectComplianceDeviceDetail(data, device.id);
+  const issueHint = (context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned';
 
   return (
     <div>
       <div className="page-header">
-        <h1>Device 360 - {device.name}</h1>
-        <p>Causality view: discovery metadata, normalization path, current state.</p>
+        <h1>Device 360 Investigation</h1>
+        <p>{device.name} / {device.siteId} / role: {effectiveRole}</p>
       </div>
 
-      <Panel title="Current State">
-        <p>Health: <StatusBadge value={context?.currentHealth ?? device.health} /></p>
-        <p>Site: {device.siteId}</p>
-        <p>Role: {effectiveRole} (detected: {device.roleDetected}, override: {device.roleOverride ?? 'none'})</p>
-        <p>Reachability: <StatusBadge value={device.reachability} /></p>
-      </Panel>
+      <SummaryStrip items={[
+        { label: 'Health', value: context?.currentHealth ?? device.health },
+        { label: 'Reachability', value: device.reachability },
+        { label: 'Compliance', value: compliance?.status ?? 'unknown' },
+        { label: 'Software Task', value: imageState?.lastTaskStatus ?? 'none' }
+      ]} />
 
-      <Panel title="Current Issues">
-        <div className="tag-row">{(context?.currentIssues ?? []).map((i) => <IssueTag key={i} value={i.toLowerCase().includes('role') ? 'mis-role' : i.toLowerCase().includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'} />)}</div>
-        <p><Link to={`/assurance?site=${device.siteId}`}>Open in Assurance Lite</Link> | <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}&issue=${(context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'}`}>Troubleshooting Bridge</Link> | <Link to={`/command-runner?site=${device.siteId}&device=${device.id}&issue=${(context?.currentIssues?.[0] ?? '').includes('Role') ? 'mis-role' : (context?.currentIssues?.[0] ?? '').includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'}`}>Command Runner</Link> | <Link to={`/assurance/path-trace?device=${device.id}&site=${device.siteId}`}>Path Trace</Link> | <Link to={`/assurance/capture?device=${device.id}&site=${device.siteId}`}>Capture Lite</Link></p>
-      </Panel>
+      <div className="investigation-layout">
+        <div>
+          <Panel title="Current State / Metadata">
+            <p>Health: <StatusBadge value={context?.currentHealth ?? device.health} /></p>
+            <p>Site: {device.siteId}</p>
+            <p>Role: {effectiveRole} (detected: {device.roleDetected}, override: {device.roleOverride ?? 'none'})</p>
+            <p>Management IP: {device.managementIp}</p>
+            <p>Source job: {device.sourceDiscoveryJobId}</p>
+          </Panel>
 
-      <Panel title="Software Image Status">
-        <p>Current image: {imageState?.currentImage ?? 'unknown'}</p>
-        <p>Target image: {imageState?.targetImage ?? '-'}</p>
-        <p>Eligibility: <StatusBadge value={imageState?.eligible ? 'eligible' : 'ineligible'} /></p>
-        <p>Last software task: <StatusBadge value={imageState?.lastTaskStatus ?? 'none'} /></p>
-        <p><Link to={`/software/images?site=${device.siteId}&device=${device.id}`}>Open Software Images</Link></p>
-      </Panel>
+          <Panel title="Timeline (Normalization + Events)">
+            <ul>{normalizationTimeline.map((h) => <li key={h.id}>{h.at} - [{h.type}] {h.message}</li>)}</ul>
+          </Panel>
 
+          <Panel title="Software / Compliance">
+            <p>Current image: {imageState?.currentImage ?? 'unknown'} / target: {imageState?.targetImage ?? '-'}</p>
+            <p>Compliance: <StatusBadge value={compliance?.status ?? 'unknown'} /> / reason: {compliance?.reasonCategory ?? 'none'}</p>
+          </Panel>
+        </div>
 
-      <Panel title="Compliance Status">
-        <p>Status: <StatusBadge value={compliance?.status ?? 'unknown'} /></p>
-        <p>Reason: {compliance?.reasonCategory ?? 'none'}</p>
-        <p><Link to={`/compliance/device/${device.id}`}>Open Compliance Detail</Link></p>
-      </Panel>
+        <div className="right-ops-rail">
+          <Panel title="Issues + Next Action">
+            <div className="tag-row">{(context?.currentIssues ?? []).map((i) => <IssueTag key={i} value={i.toLowerCase().includes('role') ? 'mis-role' : i.toLowerCase().includes('reachability') ? 'mgmt-ambiguity' : 'unassigned'} />)}</div>
+            <p>{context?.recommendedNextAction ?? 'Review normalization status in Inventory.'}</p>
+          </Panel>
 
-      <Panel title="Discovery Metadata">
-        <p>Source job: {device.sourceDiscoveryJobId}</p>
-        <p>Management IP: {device.managementIp}</p>
-        <p>Preferred management IP policy: {device.preferredManagementIpPolicy}</p>
-        <p>Policy candidate: {device.preferredManagementIpCandidate ?? 'N/A'}</p>
-      </Panel>
+          <Panel title="Investigation Actions">
+            <div className="quick-links">
+              <Link to={`/assurance?site=${device.siteId}`}>Assurance</Link>
+              <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}&issue=${issueHint}`}>Troubleshooting</Link>
+              <Link to={`/assurance/path-trace?device=${device.id}&site=${device.siteId}`}>Path Trace</Link>
+              <Link to={`/assurance/capture?device=${device.id}&site=${device.siteId}`}>Capture</Link>
+              <Link to={`/software/images?site=${device.siteId}&device=${device.id}`}>Software</Link>
+              <Link to={`/compliance/device/${device.id}`}>Compliance Detail</Link>
+            </div>
+          </Panel>
 
-      <Panel title="Normalization Timeline">
-        <ul>{normalizationTimeline.map((h) => <li key={h.id}>{h.at} - [{h.type}] {h.message}</li>)}</ul>
-      </Panel>
-
-      <Panel title="Recommended Next Action">
-        <p>{context?.recommendedNextAction ?? 'Review normalization status in Inventory.'}</p>
-      </Panel>
-
-      <div className="quick-links">
-        <Link to="/inventory">Inventory</Link>
-        <Link to="/topology">Topology</Link>
-        <Link to={`/assurance?site=${device.siteId}`}>Assurance Lite</Link>
-        <Link to={`/troubleshooting?device=${device.id}&site=${device.siteId}`}>Troubleshooting Bridge</Link>
-        <Link to={`/provision?site=${device.siteId}&device=${device.id}`}>Provision</Link>
-        <Link to={`/software/images?site=${device.siteId}&device=${device.id}`}>Software Images</Link>
-        <Link to={`/command-runner?site=${device.siteId}&device=${device.id}`}>Command Runner</Link>
-        <Link to={`/activities?site=${device.siteId}&device=${device.id}`}>Activities</Link>
-        <Link to={`/compliance?site=${device.siteId}&device=${device.id}`}>Compliance</Link>
-        <Link to={`/wireless/maps?site=${device.siteId}&device=${device.id}`}>Wireless Maps</Link>
-        <Link to={`/wireless/security?site=${device.siteId}&device=${device.id}`}>Wireless Security</Link>
-        <Link to={`/sda/fabric?site=${device.siteId}&device=${device.id}`}>Fabric Overview</Link>
-        <Link to={`/sda/policy?site=${device.siteId}&device=${device.id}`}>Policy Matrix</Link>
-        <Link to={`/assurance/clients?site=${device.siteId}`}>Client Health</Link>
-        <Link to={`/assurance/issues?site=${device.siteId}`}>Issues/Events</Link>
-        <Link to={`/assurance/path-trace?device=${device.id}&site=${device.siteId}`}>Path Trace</Link>
-        <Link to={`/assurance/capture?device=${device.id}&site=${device.siteId}`}>Capture Lite</Link>
+          <Panel title="Related Views">
+            <div className="quick-links">
+              <Link to="/inventory">Inventory</Link>
+              <Link to="/topology">Topology</Link>
+              <Link to={`/assurance/issues?site=${device.siteId}`}>Issues/Events</Link>
+              <Link to={`/assurance/clients?site=${device.siteId}`}>Client Health</Link>
+            </div>
+          </Panel>
+        </div>
       </div>
     </div>
   );
