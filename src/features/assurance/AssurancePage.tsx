@@ -13,11 +13,16 @@ import { SectionTabs } from '../../components/SectionTabs';
 import { TableSection } from '../../components/TableSection';
 import { DataTable } from '../../components/DataTable';
 import { DetailRailSection } from '../../components/DetailRailSection';
+import { ContextHeader } from '../../components/ContextHeader';
+import { DrillDownLink } from '../../components/DrillDownLink';
+import { ACTION_LABELS } from '../../app/actionVocabulary';
 
 export function AssurancePage() {
   const { data, setSelectedDeviceId } = useAppState();
   const [params] = useSearchParams();
   const siteFocus = params.get('site') ?? '';
+  const deviceFocus = params.get('device') ?? '';
+  const issueFocus = params.get('issue') ?? '';
   const trendRange = (params.get('range') as '1h' | '24h' | '7d' | null) ?? '24h';
   const summary = selectAssuranceSummary(data, siteFocus || undefined);
   const trend = selectAssuranceTrend(trendRange);
@@ -31,6 +36,7 @@ export function AssurancePage() {
   return (
     <div>
       <PageHeader title="Assurance Monitoring Hub" subtitle="Health and issue drill-down dashboard." />
+      <ContextHeader site={siteFocus || 'all'} device={deviceFocus} issue={issueFocus} time={trendRange} />
 
       <FilterStrip>
         <select><option>Time: {trendRange}</option><option>1h</option><option>24h</option><option>7d</option></select>
@@ -63,7 +69,7 @@ export function AssurancePage() {
           <TableSection title="Site Health" metadata={`sites ${summary.siteSummary.length}`}>
             <DataTable
               columns={['Site', 'Health', 'Impacted', 'Actions']}
-              rows={summary.siteSummary.map((site) => [site.name, <StatusChip key={site.siteId} value={site.health} />, site.impacted, <Link to={`/assurance?site=${site.siteId}`}>Focus</Link>])}
+              rows={summary.siteSummary.map((site) => [site.name, <StatusChip key={site.siteId} value={site.health} />, site.impacted, <Link to={`/assurance?site=${site.siteId}`}>{ACTION_LABELS.focus}</Link>])}
               selectedRow={selectedSiteIndex}
               onRowSelect={setSelectedSiteIndex}
               actionColumnIndexes={[3]}
@@ -73,7 +79,7 @@ export function AssurancePage() {
           <TableSection title="Issues / Events" metadata={`rows ${issues.length}`}>
             <DataTable
               columns={['Title', 'Site', 'Status', 'Category', 'Actions']}
-              rows={issues.map((i) => [i.title, i.siteId, <StatusChip key={i.id} value={i.status} />, i.category, <Link to={`/assurance/issues?site=${i.siteId}&issue=${i.id}`}>Open</Link>])}
+              rows={issues.map((i) => [i.title, i.siteId, <StatusChip key={i.id} value={i.status} />, i.category, <Link to={`/assurance/issues?site=${i.siteId}&issue=${i.id}`}>{ACTION_LABELS.open}</Link>])}
               selectedRow={selectedIssueIndex}
               onRowSelect={setSelectedIssueIndex}
               actionColumnIndexes={[4]}
@@ -92,11 +98,11 @@ export function AssurancePage() {
 
           <DetailRailSection title="Drill-down Actions">
             <div className="quick-links">
-              {selectedIssue?.deviceId && <button onClick={() => setSelectedDeviceId(selectedIssue.deviceId)}>Set Global Device</button>}
-              {selectedIssue?.deviceId && <Link to={`/device-360/${selectedIssue.deviceId}`}>Device 360</Link>}
-              {selectedIssue?.clientId && <Link to={`/client-360/${selectedIssue.clientId}?site=${selectedIssue.siteId}`}>Client 360</Link>}
-              <Link to={selectedIssue ? `/troubleshooting?site=${selectedIssue.siteId}&device=${selectedIssue.deviceId ?? ''}&issue=${selectedIssue.category}` : '/troubleshooting'}>Troubleshooting</Link>
-              <Link to={selectedIssue ? `/assurance/path-trace?site=${selectedIssue.siteId}&issue=${selectedIssue.id}` : '/assurance/path-trace'}>Path Trace</Link>
+              {selectedIssue?.deviceId && <button onClick={() => setSelectedDeviceId(selectedIssue.deviceId)}>{ACTION_LABELS.focusDevice}</button>}
+              {selectedIssue?.deviceId && <DrillDownLink to={`/device-360/${selectedIssue.deviceId}`} label="Device 360" reason="Reason: validate impacted device context" />}
+              {selectedIssue?.clientId && <DrillDownLink to={`/client-360/${selectedIssue.clientId}?site=${selectedIssue.siteId}`} label="Client 360" reason="Reason: validate client impact scope" />}
+              <DrillDownLink to={selectedIssue ? `/troubleshooting?site=${selectedIssue.siteId}&device=${selectedIssue.deviceId ?? ''}&issue=${selectedIssue.category}` : '/troubleshooting'} label="Troubleshooting" reason="Reason: isolate probable fault domain" />
+              <DrillDownLink to={selectedIssue ? `/assurance/path-trace?site=${selectedIssue.siteId}&issue=${selectedIssue.id}` : '/assurance/path-trace'} label="Path Trace" reason="Reason: verify end-to-end path health" />
             </div>
           </DetailRailSection>
         </div>
